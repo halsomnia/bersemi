@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css2?family=Allura&family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Great+Vibes&family=Lora:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Pinyon+Script&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap");
+
+.t3 {
+  --t3-night: var(--bg, #0e1a2b);
+  --t3-paper: var(--surface, #f4efe6);
+  --t3-ink: var(--ink, #1a1a1a);
+  --t3-accent: var(--accent, #c4a574);
+  --t3-mute: var(--mute, #6e675c);
+  --t3-line: var(--line, #e0d6c8);
+  --t3-mark: #c45c4a;
+  --t3-display: var(--display, "Great Vibes"), cursive;
+  --t3-title: var(--title, "Playfair Display"), serif;
+  --t3-body: var(--body, "Source Serif 4"), serif;
+  background: var(--t3-night);
+  color: var(--t3-ink);
+  font-family: var(--t3-body);
+  padding-bottom: 8px;
+}
+.t3-cover { min-height: 100dvh; display: grid; align-items: stretch; padding: 20px 16px; }
+.t3-pad { padding: 0 16px 16px; }
+
+.t3-ticket {
+  position: relative;
+  background: var(--t3-paper);
+  color: var(--t3-ink);
+  padding: 28px 22px 32px;
+  text-align: center;
+  background-image:
+    radial-gradient(circle at 0 28px, var(--t3-night) 10px, transparent 11px),
+    radial-gradient(circle at 100% 28px, var(--t3-night) 10px, transparent 11px);
+}
+.t3-label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--t3-mute);
+}
+.t3-label.gap { margin-top: 22px; }
+.t3-plane { margin: 18px 0 8px; opacity: 0.55; letter-spacing: 0.4em; }
+.t3-cover-space { flex: 1; min-height: 28vh; }
+.t3-cover .t3-ticket {
+  min-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.t3-to { margin-top: auto; font-size: 12px; color: var(--t3-mute); }
+.t3-guest { font-family: var(--t3-title); font-size: 22px; margin: 6px 0 18px; }
+.t3-open {
+  border: 0;
+  background: var(--t3-night);
+  color: var(--t3-paper);
+  padding: 11px 22px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.t3-name {
+  font-family: var(--t3-title);
+  font-weight: 500;
+  font-size: clamp(28px, 9vw, 40px);
+  letter-spacing: 0.06em;
+  margin: 4px 0;
+}
+.t3-and {
+  font-family: var(--t3-display);
+  font-size: 28px;
+  margin: 2px 0;
+}
+.t3-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--t3-line);
+  text-align: left;
+}
+.t3-meta span { display: block; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--t3-mute); }
+.t3-meta b { font-family: var(--t3-title); font-weight: 500; font-size: 13px; }
+.t3-stamp {
+  width: 72px; height: 72px;
+  margin: 20px auto 0;
+  border: 2px solid color-mix(in srgb, var(--t3-ink) 35%, transparent);
+  border-radius: 50%;
+  display: grid; place-content: center;
+  font-family: var(--t3-title);
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  transform: rotate(-8deg);
+  opacity: 0.7;
+}
+.t3-stamp small { display: block; font-size: 9px; letter-spacing: 0.08em; }
+
+.t3-copy { font-size: 14px; line-height: 1.7; color: var(--t3-mute); }
+.t3-arab { font-family: var(--t3-title); font-size: 20px; color: var(--t3-ink); margin-bottom: 10px; }
+.t3-ticket blockquote {
+  margin-top: 16px;
+  font-family: var(--t3-title);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--t3-ink);
+}
+.t3-ticket cite {
+  display: block;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--t3-mute);
+}
+
+.t3-photo {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin: 14px 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--t3-ink) 6%, var(--t3-paper));
+}
+.t3-photo.portrait { aspect-ratio: 3 / 4; width: min(220px, 70%); margin-left: auto; margin-right: auto; }
+.t3-photo img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(0.15); }
+.t3-photo.empty { display: grid; place-items: center; color: var(--t3-mute); font-size: 12px; }
+
+.t3-couple { display: grid; gap: 16px; }
+.t3-person h2 { font-family: var(--t3-title); font-size: 22px; font-weight: 500; margin: 8px 0; }
+.t3-person p { font-size: 14px; line-height: 1.5; color: var(--t3-mute); }
+.t3-ig { display: inline-block; margin-top: 8px; color: var(--t3-night); font-size: 13px; }
+
+.t3-save .hp-count { margin-top: 16px; }
+.t3-save .hp-count-cell {
+  background: transparent;
+  border: 1px solid var(--t3-line);
+}
+.t3-savedate {
+  font-family: var(--t3-title);
+  font-size: 22px;
+  margin-top: 16px;
+  letter-spacing: 0.08em;
+}
+.t3-hari { font-size: 13px; color: var(--t3-mute); margin-bottom: 4px; }
+
+.t3-event h3 { font-family: var(--t3-title); font-size: 26px; font-weight: 500; margin: 8px 0; }
+.t3-event p { color: var(--t3-mute); font-size: 14px; line-height: 1.5; }
+.t3-maps {
+  display: inline-block;
+  margin-top: 14px;
+  background: var(--t3-night);
+  color: var(--t3-paper);
+  text-decoration: none;
+  padding: 10px 18px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.t3-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.t3-grid .t3-photo { margin: 0; aspect-ratio: 1; }
+
+.t3-ticket strong { display: block; font-family: var(--t3-title); font-size: 20px; color: var(--t3-ink); margin: 4px 0; }
+.t3-row { display: flex; gap: 8px; margin: 12px 0; }
+.t3-row button, .t3-ticket input, .t3-ticket textarea {
+  width: 100%;
+  border: 1px solid var(--t3-line);
+  background: #fff;
+  color: var(--t3-ink);
+  padding: 11px;
+  font: inherit;
+}
+.t3-row button.on { background: var(--t3-night); color: var(--t3-paper); border-color: var(--t3-night); }
+.t3-send {
+  width: 100%;
+  margin-top: 8px;
+  border: 0;
+  background: var(--t3-night);
+  color: var(--t3-paper);
+  padding: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.t3-note { margin-top: 8px; font-size: 12px; color: var(--t3-mute); }
+.t3-wishes { list-style: none; margin-top: 16px; display: grid; gap: 8px; text-align: left; }
+.t3-wishes li { border-top: 1px dashed var(--t3-line); padding-top: 10px; }
+.t3-wishes b { display: block; font-family: var(--t3-title); }
+.t3-wishes span { font-size: 14px; color: var(--t3-mute); }
+
+.t3-foot {
+  text-align: center;
+  padding: 20px 16px 40px;
+  color: color-mix(in srgb, var(--t3-paper) 70%, transparent);
+  font-size: 12px;
+}
+.t3-foot strong {
+  display: block;
+  margin-top: 4px;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  color: var(--t3-paper);
+}
