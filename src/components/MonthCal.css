@@ -1,0 +1,32 @@
+.mcal { width: 100%; }
+.mcal-month {
+  font-family: var(--t3-title, inherit);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.mcal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px 0;
+  text-align: center;
+}
+.mcal-dow {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--t3-mute, #7a736c);
+}
+.mcal-day {
+  font-size: 13px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+}
+.mcal-day.on {
+  width: 28px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--t3-mark, #b23a3a);
+  color: #fff;
+}

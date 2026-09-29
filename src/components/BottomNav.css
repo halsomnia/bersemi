@@ -1,0 +1,36 @@
+/* Rata di tepi bawah (bukan pil mengambang), pakai token warna global (index.css)
+   supaya selalu sewarna dengan sisa aplikasi dan dengan chrome sistem Android. */
+.bnav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  margin: 0 auto;
+  max-width: 430px;
+  z-index: 20;
+  display: flex;
+  gap: 2px;
+  padding: 6px 8px calc(6px + var(--safe-bottom));
+  background: var(--surface);
+  border-top: 0.5px solid var(--line);
+}
+.bnav-tab {
+  flex: 1;
+  height: 52px;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 3px;
+  border-radius: 10px;
+  color: var(--mute);
+  font-size: 10px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color .15s, transform .15s;
+}
+.bnav-tab .material-symbols-outlined { font-size: 22px; }
+.bnav-tab:active { transform: scale(.94); }
+.bnav-tab.on { color: var(--hati); font-weight: 600; }
+.bnav-tab:focus-visible { outline-offset: -3px; }
+
+@media (min-width: 900px) {
+  .bnav { display: none; }
+}

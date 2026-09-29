@@ -1,0 +1,73 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+
+:root {
+  /* TOKEN WARNA — sumber tunggal. Jangan tulis hex di file lain (kecuali file tema undangan).
+     --hati sama persis di kedua mode (= warna di bersemi.svg), hanya netral yang berganti. */
+  --logo-h: 20px; /* tinggi logo Bersemi, ubah angka ini untuk mengecilkan/membesarkan */
+  --paper: #F5F2EE;
+  --surface: #FFFFFF;
+  --ink: #1C1A18;
+  --mute: #6B6560;
+  --line: #E4DFD8;
+  --hati: #B33434;
+  --on-hati: #FFFFFF;
+  --r-sm: 10px;   /* tombol kecil, tab */
+  --r-md: 16px;   /* kartu, panel */
+  --r-pill: 999px; /* chip, search, tombol utama */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html[data-theme="dark"] {
+  --paper: #131110;
+  --surface: #1D1A18;
+  --ink: #F3EEE8;
+  --mute: #A39D95;
+  --line: #322E2A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { min-height: 100%; }
+html { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+img { display: block; max-width: 100%; }
+a { color: inherit; }
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: 400;
+  font-style: normal;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: normal;
+  display: inline-block;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+:focus-visible {
+  outline: 2px solid var(--hati);
+  outline-offset: 2px;
+}
+
+.brand-logo {
+  height: var(--logo-h);
+  width: auto;
+  display: block;
+}
+.brand-logo.sm { height: calc(var(--logo-h) - 6px); }
+
+.app-main { min-width: 0; }
+@media (min-width: 900px) {
+  .app-shell { display: flex; min-height: 100dvh; align-items: stretch; }
+  .bnav { display: none; }
+}
