@@ -1,3 +1,5 @@
+RULE INI JANGAN DI HAPUS
+
 # Bersemi — Aturan Baku
 
 Sumber kebenaran. Kode yang bertentangan dengan dokumen ini yang harus diubah.
