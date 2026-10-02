@@ -2,36 +2,55 @@
 
 @media (min-width: 900px) {
   .sidenav {
+    --edge: 20px; /* satu tepi kiri untuk logo, ikon menu, tagline, dan tombol mode */
     display: flex;
     flex-direction: column;
-    gap: 28px;
     width: 220px;
     flex: none;
-    min-height: 100dvh;
-    padding: 28px 18px;
+    height: 100dvh;
+    align-self: flex-start;
     background: var(--paper);
     border-right: 0.5px solid var(--line);
     position: sticky;
     top: 0;
   }
-  .sidenav-list { display: grid; gap: 4px; }
+  .sidenav-top {
+    height: var(--bar-h);
+    flex: none;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--edge);
+    border-bottom: 0.5px solid var(--line);
+  }
+  .sidenav-list { display: grid; gap: 2px; padding: 16px var(--edge) 0; }
   .sidenav-tab {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px 10px;
-    border-radius: var(--r-sm);
+    padding: 9px 0;
     text-decoration: none;
     color: var(--mute);
     font-size: 14px;
     font-weight: 500;
+    white-space: nowrap;
   }
   .sidenav-tab .material-symbols-outlined { font-size: 20px; }
   .sidenav-tab.on { color: var(--hati); font-weight: 600; }
+  .sidenav-foot { margin-top: auto; padding: 0 var(--edge) 16px; }
   .sidenav-tag {
-    margin-top: auto;
     font-size: 12px;
     color: var(--mute);
     line-height: 1.4;
+    margin-bottom: 8px;
   }
+  .sidenav-mode {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+  }
+  .sidenav-mode:hover { color: var(--ink); }
 }

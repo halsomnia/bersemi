@@ -4,17 +4,19 @@
   /* TOKEN WARNA — sumber tunggal. Jangan tulis hex di file lain (kecuali file tema undangan).
      --hati sama persis di kedua mode (= warna di bersemi.svg), hanya netral yang berganti. */
   --logo-h: 20px; /* tinggi logo Bersemi, ubah angka ini untuk mengecilkan/membesarkan */
-  --paper: #F5F2EE;
+  --paper: #FAFAF9;
   --surface: #FFFFFF;
-  --ink: #1C1A18;
-  --mute: #6B6560;
-  --line: #E4DFD8;
+  --ink: #1A1A1A;
+  --mute: #6A6A68;
+  --line: #E8E8E6;
   --hati: #B33434;
   --on-hati: #FFFFFF;
   --r-sm: 10px;   /* tombol kecil, tab */
   --r-md: 16px;   /* kartu, panel */
   --r-pill: 999px; /* chip, search, tombol utama */
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bar-h: 64px;  /* tinggi baris atas desktop: baris logo sidebar = bar judul/search halaman */
+  --col: 600px;   /* lebar kolom isi halaman di desktop (dipusatkan) */
 }
 
 html[data-theme="dark"] {
@@ -70,4 +72,22 @@ a { color: inherit; }
 @media (min-width: 900px) {
   .app-shell { display: flex; min-height: 100dvh; align-items: stretch; }
   .bnav { display: none; }
+  .app-main { flex: 1 1 auto; }
+
+  /* Tata letak halaman desktop: bar atas + kolom tengah. Dipakai Tema, Pesanan, Bantuan. */
+  .page-bar {
+    height: var(--bar-h);
+    border-bottom: 0.5px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .page-bar > * { width: calc(100% - 64px); max-width: var(--col); }
+  .page-bar h1 { font-size: 18px; font-weight: 600; text-align: center; margin: 0; }
+  .page-body {
+    width: calc(100% - 64px);
+    max-width: var(--col);
+    margin: 0 auto;
+    padding: 28px 0 56px;
+  }
 }

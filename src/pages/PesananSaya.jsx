@@ -25,7 +25,10 @@ export default function PesananSaya() {
       <header className="pesanan-head">
         <Logo />
       </header>
-      <h1 className="pesanan-title">Pesanan Saya</h1>
+      <div className="page-bar">
+        <h1 className="pesanan-title">Pesanan Saya</h1>
+      </div>
+      <div className="page-body">
       <p className="pesanan-note">
         Catatan pesanan dari HP ini — bukan akun. Admin akan menghubungi lewat WhatsApp untuk tagihan dan link undangan.
       </p>
@@ -53,6 +56,7 @@ export default function PesananSaya() {
           ))}
         </ul>
       )}
+      </div>
     </div>
   )
 }

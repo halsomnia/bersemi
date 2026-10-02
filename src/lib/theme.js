@@ -1,6 +1,6 @@
 // Satu-satunya tempat yang mengganti mode terang/gelap.
 // Warna theme-color = --paper di index.css, supaya bar browser/Android menyatu dengan app.
-const META_COLOR = { light: "#F5F2EE", dark: "#131110" }
+const META_COLOR = { light: "#FAFAF9", dark: "#131110" }
 
 export function getTheme() {
   return localStorage.getItem("theme") === "dark" ? "dark" : "light"

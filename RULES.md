@@ -1,4 +1,4 @@
-RULE INI JANGAN DI HAPUS
+RULE.md, dev.bat, dan upload.bat jangan di hapus, selalu sertakan pada folder ini.
 
 # Bersemi — Aturan Baku
 
@@ -13,8 +13,8 @@ Revisi: sebut kode aturan (mis. **D-3**), catat di §11.
 |---|---|
 | Warna, sudut, tinggi logo | `src/index.css` saja |
 | Mode terang/gelap | `src/lib/theme.js` |
-| Logo | `public/bersemi.svg` + `src/components/Logo.jsx` |
-| Nav bawah / samping | `src/components/BottomNav.*` · `SideNav.*` |
+| Logo | `public/bersemi.svg` + `public/bersemi-mark.svg` + `src/components/Logo.jsx` |
+| Nav bawah / samping, toggle mode (desktop) | `src/components/BottomNav.*` · `SideNav.*` |
 | Bingkai desktop undangan | `src/components/InviteFrame.jsx` + `.css` |
 | Katalog (`/`) | `src/pages/Home.jsx` + `.css` |
 | Form Studio + dock | `src/pages/Studio.jsx` + `.css` |
@@ -36,7 +36,7 @@ Kirim hanya file yang berubah. Jangan full zip kecuali diminta.
 | B-2 | Aksen: `#B33434` dari `public/bersemi.svg`. |
 | B-3 | `--hati` sama di terang dan gelap. Yang berganti hanya netral. |
 | B-4 | Satu-satunya warna di UI app. Selain hitam/putih/abu = merah hati. Pengecualian: file tema undangan. |
-| B-5 | Logo dari `public/bersemi.svg` apa adanya. Tinggi hanya `--logo-h`. |
+| B-5 | Logo dari `public/bersemi.svg` apa adanya. Tinggi hanya `--logo-h`. Mark (glyph saja) di `public/bersemi-mark.svg`, diambil dari path pertama `bersemi.svg`; dipakai hanya di dalam search katalog. |
 | B-6 | Repo: https://github.com/halsomnia/bersemi |
 | B-7 | Dilarang `--hati-soft` dan `--hati-deep`. Tidak ada tint merah muda. |
 
@@ -46,10 +46,11 @@ Ide signature (jangan dikerjakan sebelum disetujui): mark hati-tunas untuk favic
 
 ## 2. Token (`index.css` saja)
 
-Terang: `--paper #F5F2EE` · `--surface #FFFFFF` · `--ink #1C1A18` · `--mute #6B6560` · `--line #E4DFD8`
+Terang: `--paper #FAFAF9` · `--surface #FFFFFF` · `--ink #1A1A1A` · `--mute #6A6A68` · `--line #E8E8E6`
 Gelap: `--paper #131110` · `--surface #1D1A18` · `--ink #F3EEE8` · `--mute #A39D95` · `--line #322E2A`
 Tetap: `--hati #B33434` · `--on-hati #FFFFFF`
-Sudut: `--r-sm 10px` · `--r-md 16px` · `--r-pill 999px`
+Sudut: `--r-sm 10px` (tombol kecil, tab, search) · `--r-md 16px` · `--r-pill 999px`
+Layout desktop: `--bar-h 64px` (tinggi baris atas) · `--col 600px` (lebar kolom isi)
 
 Hex aplikasi hanya di `index.css` (D-10).
 
@@ -66,9 +67,11 @@ Hex aplikasi hanya di `index.css` (D-10).
 | D-5 | Ikon Material Symbols **Outlined** (`FILL 0`). |
 | D-6 | Sudut lewat token di atas. |
 | D-7 | Tombol utama: `--hati` + `--on-hati` + pill. **Satu** per layar. |
-| D-8 | Chip/filter: latar transparan. Aktif = `--hati` + garis bawah 1px. |
+| D-8 | Chip/filter kategori: latar transparan. Aktif = `--ink` + garis bawah 1px. **Promo** (bukan kategori): selalu `--hati` + ikon `sell`, di kiri, dipisah garis `0.5px`; aktif = garis bawah `--hati`. |
 | D-9 | Gerak: opacity/geser max 150ms. Tidak bounce. |
 | D-10 | Tidak ada hex di CSS app selain `index.css`. |
+| D-11 | Desktop: bar atas setinggi `--bar-h` dan satu garis dengan baris logo sidebar. Search (Tema) atau judul (Pesanan, Bantuan, **rata tengah**) ada di bar itu. Isi di kolom tengah selebar `--col`, semua halaman sama. Kelas `.page-bar` dan `.page-body` (index.css). |
+| D-12 | Sidebar: logo, ikon menu, tagline, dan tombol mode memakai satu tepi kiri (`--edge`). |
 
 ---
 
@@ -77,12 +80,12 @@ Hex aplikasi hanya di `index.css` (D-10).
 | Kode | Aturan |
 |---|---|
 | P-1 | Tidak ada halaman landing. `/` = katalog tema. `/tema` redirect ke `/`. |
-| P-2 | **Katalog**: search + chip teks. Aktif = `--hati` + garis bawah 1px. Promo sama bentuk, di kiri. Kartu: foto, nama, harga, kategori. Tagline hanya di sidebar desktop. |
+| P-2 | **Katalog**: satu bar search dengan mark logo di kiri (tanpa header logo terpisah), lalu tab kategori (Semua, Nikah, Lamaran, Ultah). Promo di kiri tab, hanya muncul jika ada tema promo, bukan kategori. Kartu: foto, nama, harga, kategori. Tagline hanya di sidebar desktop. |
 | P-3 | **Studio Demo**: undangan full-bleed. Dock 3 langkah. Tombol warna terpisah. Auto-hide dock saat scroll turun. |
 | P-4 | **Isi data / Order**: kartu `--surface` + garis `0.5px` + `--r-md`. Header: ikon outlined `--hati` + judul. Input tanpa kotak, cukup garis pemisah. |
 | P-5 | **Order**: cara pesan (O-8) + garansi 24 jam + ringkasan + satu tombol Order. |
 | P-6 | **Pesanan Saya**: catatan perangkat ini, status apa adanya. Kosong = satu kalimat + **Lihat Tema**. |
-| P-7 | **Bantuan**: FAQ sesuai O + garansi admin 24 jam. Toggle mode. Footer tagline B-1. |
+| P-7 | **Bantuan**: FAQ sesuai O + garansi admin 24 jam. Toggle mode (HP saja; desktop di sidebar). Footer tagline B-1. |
 
 ---
 
@@ -90,7 +93,7 @@ Hex aplikasi hanya di `index.css` (D-10).
 
 | Kode | Aturan |
 |---|---|
-| N-1 | Nav 3 item: Tema, Pesanan, Bantuan. HP = bawah, desktop = kiri. Hilang di Studio. |
+| N-1 | Nav 3 item: Tema, Pesanan, Bantuan. HP = bawah, desktop = kiri. Hilang di Studio. Toggle mode terang/gelap: desktop = sidebar kiri bawah, HP = bagian Tampilan di Bantuan. |
 | N-2 | HP: dock Studio sama seperti bottom nav. Desktop: dock jadi rail kiri. |
 | N-3 | Tab aktif: warna `--hati` saja. Tanpa latar. |
 | N-4 | HP: lebar 430px tengah. Desktop ≥900px: nav kiri 220px, isi max 1080px. |
@@ -173,3 +176,5 @@ Nama tamu `?to=` setelah link live, bukan di form Studio.
 | 2026-09-28 | Beranda dipangkas ke tagline + 1 CTA. `--hati-soft/--hati-deep` dihapus. Form kartu dirapikan. FAQ diselaraskan ke garansi admin 24 jam. Peta file ditambah. |
 | 2026-09-28 | Desktop Opsi B (≥900px): SideNav, katalog 4 kolom. Undangan v1: InviteFrame kiri tetap / kanan scroll. |
 | 2026-09-28 | `/` = katalog. Tab Beranda dihapus. Nav 3 item. `/tema` redirect. |
+| 2026-10-02 | Katalog: logo masuk ke dalam search (mark), header logo dihapus. Promo dipisah dari kategori: kiri, merah + ikon `sell`, garis pemisah. Tab kategori aktif = `--ink` (revisi D-8, P-2). Search sudut `--r-sm`. |
+| 2026-10-02 | Palet terang baru (putih bersih): paper `#FAFAF9`, ink `#1A1A1A`, mute `#6A6A68`, line `#E8E8E6`. Desktop: kolom tengah + bar atas sejajar logo (D-11, D-12), judul Pesanan/Bantuan rata tengah, toggle mode pindah ke sidebar kiri bawah (N-1, P-7). Mark logo di search disembunyikan di desktop. |

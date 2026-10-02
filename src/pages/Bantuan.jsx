@@ -25,8 +25,11 @@ export default function Bantuan() {
         <Logo />
       </header>
 
-      <h1 className="bantuan-title">Bantuan</h1>
+      <div className="page-bar">
+        <h1 className="bantuan-title">Bantuan</h1>
+      </div>
 
+      <div className="page-body">
       <section className="sec">
         <h2>Pertanyaan Umum</h2>
         <div className="faq">
@@ -45,7 +48,7 @@ export default function Bantuan() {
         </div>
       </section>
 
-      <section className="sec">
+      <section className="sec sec-tampilan">
         <h2>Tampilan</h2>
         <div className="toggle-row">
           <span>{theme === "dark" ? "Tampilan gelap" : "Tampilan terang"}</span>
@@ -59,6 +62,7 @@ export default function Bantuan() {
       </section>
 
       <p className="tentang">Pilih tema, modifikasi, selesai.</p>
+      </div>
     </div>
   )
 }
