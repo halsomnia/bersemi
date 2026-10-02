@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import Logo from "../components/Logo"
 import { applyTheme, getTheme } from "../lib/theme"
 import "./Bantuan.css"
 
@@ -21,17 +20,11 @@ export default function Bantuan() {
 
   return (
     <div className="bantuan">
-      <header className="bantuan-head">
-        <Logo />
-      </header>
-
       <div className="page-bar">
         <h1 className="bantuan-title">Bantuan</h1>
       </div>
 
       <div className="page-body">
-      <section className="sec">
-        <h2>Pertanyaan Umum</h2>
         <div className="faq">
           {FAQ.map((f, i) => {
             const active = open === i
@@ -46,11 +39,8 @@ export default function Bantuan() {
             )
           })}
         </div>
-      </section>
 
-      <section className="sec sec-tampilan">
-        <h2>Tampilan</h2>
-        <div className="toggle-row">
+        <div className="toggle-row sec-tampilan">
           <span>{theme === "dark" ? "Tampilan gelap" : "Tampilan terang"}</span>
           <button
             type="button"
@@ -59,9 +49,8 @@ export default function Bantuan() {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           />
         </div>
-      </section>
 
-      <p className="tentang">Pilih tema, modifikasi, selesai.</p>
+        <p className="tentang">Pilih tema, modifikasi, selesai.</p>
       </div>
     </div>
   )

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import Logo from "../components/Logo"
 import "./PesananSaya.css"
 
 export const ORDERS_KEY = "bersemi-orders"
@@ -22,21 +21,19 @@ export default function PesananSaya() {
 
   return (
     <div className="pesanan">
-      <header className="pesanan-head">
-        <Logo />
-      </header>
       <div className="page-bar">
         <h1 className="pesanan-title">Pesanan Saya</h1>
       </div>
       <div className="page-body">
       <p className="pesanan-note">
-        Catatan pesanan dari HP ini — bukan akun. Admin akan menghubungi lewat WhatsApp untuk tagihan dan link undangan.
+        Catatan pesanan dari ponsel ini, bukan akun. Admin menghubungi lewat WhatsApp untuk tagihan dan link undangan.
       </p>
 
       {orders.length === 0 ? (
         <div className="pesanan-empty">
           <span className="material-symbols-outlined">receipt_long</span>
-          <p>Belum ada pesanan.</p>
+          <b>Belum ada pesanan</b>
+          <p>Pesanan dari ponsel ini akan muncul di sini.</p>
           <Link className="pesanan-cta" to="/">Lihat Tema</Link>
         </div>
       ) : (

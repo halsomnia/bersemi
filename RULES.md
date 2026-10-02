@@ -84,8 +84,8 @@ Hex aplikasi hanya di `index.css` (D-10).
 | P-3 | **Studio Demo**: undangan full-bleed. Dock 3 langkah. Tombol warna terpisah. Auto-hide dock saat scroll turun. |
 | P-4 | **Isi data / Order**: kartu `--surface` + garis `0.5px` + `--r-md`. Header: ikon outlined `--hati` + judul. Input tanpa kotak, cukup garis pemisah. |
 | P-5 | **Order**: cara pesan (O-8) + garansi 24 jam + ringkasan + satu tombol Order. |
-| P-6 | **Pesanan Saya**: catatan perangkat ini, status apa adanya. Kosong = satu kalimat + **Lihat Tema**. |
-| P-7 | **Bantuan**: FAQ sesuai O + garansi admin 24 jam. Toggle mode (HP saja; desktop di sidebar). Footer tagline B-1. |
+| P-6 | **Pesanan Saya**: catatan perangkat ini, status apa adanya. Kosong = satu kartu (ikon, "Belum ada pesanan", satu kalimat) + **Lihat Tema**. HP: tanpa logo, judul besar rata kiri. |
+| P-7 | **Bantuan**: FAQ sesuai O + garansi admin 24 jam, semua dalam satu kartu bergaris pemisah. Tanpa subjudul. Toggle mode (HP saja; desktop di sidebar). Footer tagline B-1. HP: tanpa logo, judul besar rata kiri. |
 
 ---
 
@@ -178,3 +178,4 @@ Nama tamu `?to=` setelah link live, bukan di form Studio.
 | 2026-09-28 | `/` = katalog. Tab Beranda dihapus. Nav 3 item. `/tema` redirect. |
 | 2026-10-02 | Katalog: logo masuk ke dalam search (mark), header logo dihapus. Promo dipisah dari kategori: kiri, merah + ikon `sell`, garis pemisah. Tab kategori aktif = `--ink` (revisi D-8, P-2). Search sudut `--r-sm`. |
 | 2026-10-02 | Palet terang baru (putih bersih): paper `#FAFAF9`, ink `#1A1A1A`, mute `#6A6A68`, line `#E8E8E6`. Desktop: kolom tengah + bar atas sejajar logo (D-11, D-12), judul Pesanan/Bantuan rata tengah, toggle mode pindah ke sidebar kiri bawah (N-1, P-7). Mark logo di search disembunyikan di desktop. |
+| 2026-10-02 | HP: logo dihapus dari Pesanan dan Bantuan, judul besar rata kiri. Bantuan tanpa subjudul "Pertanyaan Umum" dan "Tampilan", FAQ dalam satu kartu (P-6, P-7). |

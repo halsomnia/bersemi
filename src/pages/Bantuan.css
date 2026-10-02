@@ -3,19 +3,16 @@
   margin: 0 auto;
   padding: 16px 16px calc(96px + var(--safe-bottom));
 }
-.bantuan-head { display: flex; align-items: center; }
-.bantuan-title { font-size: 22px; margin: 20px 0 4px; }
+.bantuan-title { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; margin: 10px 0 14px; }
 
-.sec { padding: 22px 0 4px; }
-.sec h2 { font-size: 14px; color: var(--mute); margin-bottom: 10px; }
-
-.faq { display: grid; gap: 8px; }
-.faq-item {
+/* Semua FAQ dalam satu kartu, dipisah garis tipis */
+.faq {
   background: var(--surface);
   border: 0.5px solid var(--line);
   border-radius: 16px;
   overflow: hidden;
 }
+.faq-item + .faq-item { border-top: 0.5px solid var(--line); }
 .faq-q {
   width: 100%;
   display: flex;
@@ -24,8 +21,8 @@
   gap: 10px;
   border: 0;
   background: transparent;
-  padding: 14px 16px;
-  min-height: 52px;
+  padding: 13px 16px;
+  min-height: 50px;
   font-size: 13.5px;
   font-weight: 600;
   text-align: left;
@@ -36,7 +33,7 @@
 .faq-a {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows .2s ease;
+  transition: grid-template-rows .15s ease;
 }
 .faq-item.on .faq-a { grid-template-rows: 1fr; }
 .faq-a p {
@@ -46,16 +43,17 @@
   color: var(--mute);
   line-height: 1.55;
 }
-.faq-item.on .faq-a p { padding-bottom: 16px; }
+.faq-item.on .faq-a p { padding-bottom: 14px; }
 
 .toggle-row {
+  margin-top: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: var(--surface);
   border: 0.5px solid var(--line);
   border-radius: 16px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   min-height: 52px;
   font-size: 13.5px;
 }
@@ -64,12 +62,11 @@
 .tog.on { background: var(--hati); }
 .tog.on::after { left: 21px; }
 
-.tentang { margin-top: 28px; text-align: center; color: var(--mute); font-size: 12.5px; }
+.tentang { margin-top: 18px; text-align: center; color: var(--mute); font-size: 12px; }
 
 @media (min-width: 900px) {
   .bantuan { max-width: none; margin: 0; padding: 0; }
-  .bantuan-head { display: none; }
   .bantuan-title { margin: 0; }
-  .sec:first-child { padding-top: 0; }
   .sec-tampilan { display: none; } /* toggle mode pindah ke sidebar kiri bawah */
+  .tentang { margin-top: 24px; }
 }
