@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { Fragment, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import { getCatalog } from "../data/catalogs"
 import { demoInvite } from "../data/demoInvite"
 import { revokePhoto } from "../lib/photos"
 import PhotoSlot from "../components/PhotoSlot"
 import InviteFrame from "../components/InviteFrame"
+import Logo from "../components/Logo"
+import { applyTheme, getTheme } from "../lib/theme"
 import Minimal from "../themes/minimal/Minimal"
 import "./Studio.css"
 
@@ -19,9 +21,15 @@ const emptyPhotos = () => ({
 const rupiah = (n) => `Rp${Number(n || 0).toLocaleString("id-ID")}`
 
 const STEPS = [
-  { id: "demo", label: "Demo", icon: "visibility" },
+  { id: "demo", label: "Pratinjau", icon: "visibility" },
   { id: "isi", label: "Isi data", icon: "edit_note" },
   { id: "order", label: "Order", icon: "shopping_bag" },
+]
+
+const DEVICES = [
+  { id: "desk", label: "Laptop", icon: "laptop_mac" },
+  { id: "tab", label: "Tablet", icon: "tablet_mac" },
+  { id: "hp", label: "HP", icon: "smartphone" },
 ]
 
 const PHOTO_SLOTS = [
@@ -51,6 +59,7 @@ export default function Studio() {
 
   const [step, setStep] = useState("demo")
   const [device, setDevice] = useState("desk")
+  const [mode, setMode] = useState(getTheme)
   const [open, setOpen] = useState(true)
   const [pick, setPick] = useState(null)
   const [ink, setInk] = useState(0)
@@ -196,6 +205,12 @@ export default function Studio() {
     if (customSong?.url) URL.revokeObjectURL(customSong.url)
     setCustomSong({ url: URL.createObjectURL(file), name: file.name })
     setPick(null)
+  }
+
+  function toggleMode() {
+    const next = mode === "dark" ? "light" : "dark"
+    applyTheme(next)
+    setMode(next)
   }
 
   function go(next) {
@@ -535,21 +550,35 @@ export default function Studio() {
       )}
 
       <nav className={chromeVisible ? "dock" : "dock hide"} aria-label="Langkah">
+        <div className="dock-top"><Logo /></div>
         {STEPS.map((st) => {
           const active = st.id === step
           return (
-            <button key={st.id} type="button" className={active ? "dock-tab on" : "dock-tab"} aria-current={active ? "step" : undefined} onClick={() => go(st.id)}>
-              <span className="material-symbols-outlined">{st.icon}</span>
-              <span className="dock-label">{st.label}</span>
-            </button>
+            <Fragment key={st.id}>
+              <button type="button" className={active ? "dock-tab on" : "dock-tab"} aria-current={active ? "step" : undefined} onClick={() => go(st.id)}>
+                <span className="material-symbols-outlined">{st.icon}</span>
+                <span className="dock-label">{st.label}</span>
+              </button>
+              {st.id === "demo" && active && (
+                <div className="dock-sub" role="group" aria-label="Tampilan perangkat">
+                  {DEVICES.map((d) => (
+                    <button key={d.id} type="button" className={device === d.id ? "dock-sub-tab on" : "dock-sub-tab"} aria-pressed={device === d.id} onClick={() => setDevice(d.id)}>
+                      <span className="material-symbols-outlined">{d.icon}</span>
+                      <span>{d.label}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Fragment>
           )
         })}
-        {step === "demo" && (
-          <div className="device-tabs" role="tablist" aria-label="Tampilan">
-            <button type="button" className={device === "desk" ? "on" : ""} onClick={() => setDevice("desk")}>Laptop</button>
-            <button type="button" className={device === "hp" ? "on" : ""} onClick={() => setDevice("hp")}>HP</button>
-          </div>
-        )}
+        <div className="dock-foot">
+          <p className="dock-tag">Pilih tema, modifikasi, selesai.</p>
+          <button type="button" className="dock-tab dock-mode" onClick={toggleMode}>
+            <span className="material-symbols-outlined">{mode === "dark" ? "light_mode" : "dark_mode"}</span>
+            <span className="dock-label">{mode === "dark" ? "Mode terang" : "Mode gelap"}</span>
+          </button>
+        </div>
       </nav>
 
       {step === "demo" && (

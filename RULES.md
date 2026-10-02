@@ -81,7 +81,7 @@ Hex aplikasi hanya di `index.css` (D-10).
 |---|---|
 | P-1 | Tidak ada halaman landing. `/` = katalog tema. `/tema` redirect ke `/`. |
 | P-2 | **Katalog**: satu bar search dengan mark logo di kiri (tanpa header logo terpisah), lalu tab kategori (Semua, Nikah, Lamaran, Ultah). Promo di kiri tab, hanya muncul jika ada tema promo, bukan kategori. Kartu: foto, nama, harga, kategori. Tagline hanya di sidebar desktop. |
-| P-3 | **Studio Demo**: undangan full-bleed. Dock 3 langkah. Tombol warna terpisah. Auto-hide dock saat scroll turun. |
+| P-3 | **Studio Pratinjau**: undangan full-bleed. Dock 3 langkah. Tombol warna terpisah. Auto-hide dock saat scroll turun. |
 | P-4 | **Isi data / Order**: kartu `--surface` + garis `0.5px` + `--r-md`. Header: ikon outlined `--hati` + judul. Input tanpa kotak, cukup garis pemisah. |
 | P-5 | **Order**: cara pesan (O-8) + garansi 24 jam + ringkasan + satu tombol Order. |
 | P-6 | **Pesanan Saya**: catatan perangkat ini, status apa adanya. Kosong = satu kartu (ikon, "Belum ada pesanan", satu kalimat) + **Lihat Tema**. HP: tanpa logo, judul besar rata kiri. |
@@ -98,11 +98,11 @@ Hex aplikasi hanya di `index.css` (D-10).
 | N-3 | Tab aktif: warna `--hati` saja. Tanpa latar. |
 | N-4 | HP: lebar 430px tengah. Desktop ≥900px: nav kiri 220px, isi max 1080px. |
 | N-5 | Studio tanpa tombol back sendiri. |
-| N-6 | HP Demo: dock + warna auto-hide saat scroll turun. Desktop: rail selalu terlihat. |
-| N-7 | Tombol warna Demo terpisah dari dock. |
+| N-6 | HP Pratinjau: dock + warna auto-hide saat scroll turun. Desktop: rail selalu terlihat. |
+| N-7 | Tombol warna Pratinjau terpisah dari dock. |
 | N-8 | Preview tanpa bingkai HP. |
 | N-9 | Padding bawah HP `calc(96px + var(--safe-bottom))`. Desktop tanpa bottom nav. |
-| N-10 | Studio desktop: rail kiri = Demo / Isi data / Order. Demo punya tab Laptop (default) dan HP. Isi data/Order = preview + form kartu max ~460px. |
+| N-10 | Studio desktop: rail kiri (kerangka SideNav: 220px, logo di baris `--bar-h`, tagline + toggle mode di bawah) = Pratinjau / Isi data / Order. Pilihan perangkat Laptop (default) / Tablet / HP = sub-menu teks tepat di bawah Pratinjau, hanya saat Pratinjau aktif. HP: tanpa pilihan perangkat. Isi data/Order = preview + form kartu max ~460px. |
 | N-11 | Undangan desktop v1: kiri tetap (foto cover + nama + tanggal), kanan scroll tema HP 430px. HP: kiri disembunyikan. Semua tema lewat `InviteFrame`. |
 
 ---
@@ -179,3 +179,4 @@ Nama tamu `?to=` setelah link live, bukan di form Studio.
 | 2026-10-02 | Katalog: logo masuk ke dalam search (mark), header logo dihapus. Promo dipisah dari kategori: kiri, merah + ikon `sell`, garis pemisah. Tab kategori aktif = `--ink` (revisi D-8, P-2). Search sudut `--r-sm`. |
 | 2026-10-02 | Palet terang baru (putih bersih): paper `#FAFAF9`, ink `#1A1A1A`, mute `#6A6A68`, line `#E8E8E6`. Desktop: kolom tengah + bar atas sejajar logo (D-11, D-12), judul Pesanan/Bantuan rata tengah, toggle mode pindah ke sidebar kiri bawah (N-1, P-7). Mark logo di search disembunyikan di desktop. |
 | 2026-10-02 | HP: logo dihapus dari Pesanan dan Bantuan, judul besar rata kiri. Bantuan tanpa subjudul "Pertanyaan Umum" dan "Tampilan", FAQ dalam satu kartu (P-6, P-7). |
+| 2026-10-02 | Menu "Demo" diganti **Pratinjau** (P-3, N-6, N-7, N-10). Pilihan perangkat desktop: Laptop/Tablet/HP sebagai sub-menu di bawah Pratinjau (opsi A). Rail Studio disamakan dengan SideNav. |
