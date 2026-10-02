@@ -120,7 +120,6 @@
   color: var(--mn-ink);
 }
 
-.mn-band { min-height: 62vh; background: #151515; }
 .mn-person {
   min-height: 92dvh;
   display: flex;
@@ -236,15 +235,41 @@
 .mn-list span { font-size: 13px; color: var(--mn-mute); }
 
 .mn-gift { padding: 52px 28px; background: #0b0b0c; }
-.mn-bank {
-  margin-top: 16px;
+.mn-accs { display: grid; gap: 12px; margin-top: 22px; }
+.mn-acc {
   background: #fff;
   color: #161412;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.55;
-  padding: 16px 18px;
+  padding: 20px 18px 18px;
+  text-align: center;
 }
+.mn-acc-label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6e675c;
+  font-weight: 500;
+}
+.mn-acc-bank { margin-top: 10px; font-size: 15px; font-weight: 600; }
+.mn-acc-no { margin-top: 2px; font-size: 24px; font-weight: 500; letter-spacing: 0.06em; }
+.mn-acc-name { margin-top: 4px; font-size: 13px; line-height: 1.55; color: #3a3631; }
+.mn-acc-copy {
+  margin-top: 14px;
+  border: 0;
+  border-top: 1px solid #e0d6c8;
+  background: transparent;
+  color: #b33434;
+  width: 100%;
+  padding: 12px 0 0;
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  cursor: pointer;
+}
+.mn-addr { margin-top: 12px; }
+.mn-addr .mn-acc-bank { margin-top: 10px; }
+.mn-addr .mn-acc-name { margin-top: 6px; }
 
 .mn-thanks {
   min-height: 70vh;
@@ -259,9 +284,13 @@
 
 .mn-foot {
   background: #b33434;
-  color: #fff;
-  padding: 20px 16px 30px;
-  font-family: "Jost", sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  display: grid;
+  place-items: center;
+  padding: 44px 16px 48px;
+}
+.mn-foot img {
+  height: 22px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  user-select: none;
 }

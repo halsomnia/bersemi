@@ -8,7 +8,9 @@ export const demoInvite = {
   ibuPria: "Ibu Sinta Dewi",
   ayahWanita: "Bapak Ir. Budi Rahmawan",
   ibuWanita: "Ibu Nur Aini",
-  tanggal: "2026-12-12",
+  tanggalAkad: "2026-12-12",
+  resepsiSama: true,
+  tanggalResepsi: "2026-12-12",
   waktuAkad: "10.00 WIB",
   tempatAkad: "Masjid Al-Hikmah",
   alamatAkad: "Jl. Cendana No. 12, Bandung",
@@ -19,14 +21,17 @@ export const demoInvite = {
   ayatRef: "QS. Ar-Rum: 21",
   ayat:
     "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.",
-  bankNama: "BCA",
-  bankRek: "1234567890",
-  bankAn: "Alya Putri Rahmawati",
+  bankNamaWanita: "BCA",
+  bankRekWanita: "1234567890",
+  bankAnWanita: "Alya Putri Rahmawati",
+  bankNamaPria: "Mandiri",
+  bankRekPria: "0987654321",
+  bankAnPria: "Raka Aditya Pratama",
   igPria: "raka.aditya",
   igWanita: "alya.rahma",
   alamatKado: "Jl. Pondok Hijau Gg. Mulya Bandung",
-  urutanWanita: "Putri pertama dari",
-  urutanPria: "Putra kedua dari",
+  urutanWanita: "pertama",
+  urutanPria: "kedua",
   giftRumah: "Rumah Alya Firyola",
   liveOn: true,
   liveLink: "",
@@ -72,4 +77,16 @@ export function formatTanggalPanjang(iso) {
     year: "numeric",
   }).format(date)
   return `${weekday}, ${body}`
+}
+
+// Tanggal resepsi yang berlaku: sama dengan akad bila resepsiSama aktif.
+export function tanggalResepsiBerlaku(invite) {
+  return invite?.resepsiSama !== false ? invite?.tanggalAkad : invite?.tanggalResepsi
+}
+
+export function hariDari(iso) {
+  if (!iso) return ""
+  const date = new Date(`${iso}T00:00:00`)
+  if (Number.isNaN(date.getTime())) return ""
+  return new Intl.DateTimeFormat("id-ID", { weekday: "long" }).format(date)
 }

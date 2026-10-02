@@ -2,8 +2,8 @@ import { formatTanggalPanjang } from "../data/demoInvite"
 import "./InviteFrame.css"
 
 export default function InviteFrame({ invite, photos, children }) {
-  const cover = photos?.cover?.url || photos?.hero?.url || photos?.ayat?.url
-  const tanggal = formatTanggalPanjang(invite?.tanggal)
+  const cover = photos?.cover?.url || photos?.hero?.url
+  const tanggal = formatTanggalPanjang(invite?.tanggalAkad)
   const style = cover ? { backgroundImage: `url(${cover})` } : undefined
 
   return (

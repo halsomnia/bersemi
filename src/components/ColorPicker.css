@@ -1,0 +1,56 @@
+.cp { display: grid; gap: 12px; width: 100%; }
+.cp-area {
+  position: relative;
+  height: 148px;
+  border-radius: var(--r-sm);
+  border: 0.5px solid var(--line);
+  touch-action: none;
+  cursor: crosshair;
+  background:
+    linear-gradient(to top, hsl(0 0% 0%), hsl(0 0% 0% / 0)),
+    linear-gradient(to right, hsl(0 0% 100%), hsl(calc(var(--cp-h) * 1deg) 100% 50%));
+}
+.cp-hue {
+  position: relative;
+  height: 14px;
+  border-radius: var(--r-pill);
+  border: 0.5px solid var(--line);
+  touch-action: none;
+  cursor: pointer;
+  background: linear-gradient(to right, hsl(0 100% 50%), hsl(60 100% 50%), hsl(120 100% 50%), hsl(180 100% 50%), hsl(240 100% 50%), hsl(300 100% 50%), hsl(360 100% 50%));
+}
+.cp-knob {
+  position: absolute;
+  width: 20px; height: 20px;
+  margin: -10px 0 0 -10px;
+  border-radius: var(--r-pill);
+  border: 2px solid hsl(0 0% 100%);
+  outline: 0.5px solid hsl(0 0% 0% / 0.5);
+  pointer-events: none;
+}
+.cp-hue .cp-knob { top: 50%; }
+.cp-hex {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 0.5px solid var(--line);
+}
+.cp-hex span {
+  flex: none;
+  width: 22px; height: 22px;
+  border-radius: var(--r-pill);
+  border: 0.5px solid var(--line);
+}
+.cp-hex input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.cp-hex:focus-within span { border-color: var(--hati); }

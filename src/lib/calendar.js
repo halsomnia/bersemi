@@ -1,11 +1,16 @@
+import { tanggalResepsiBerlaku } from "../data/demoInvite"
+
 export function googleCalendarUrl(invite) {
   const title = `Pernikahan ${invite.wanita || ""} & ${invite.pria || ""}`.trim()
-  const day = (invite.tanggal || "").replace(/-/g, "")
-  const dates = day ? `${day}/${nextDay(invite.tanggal)}` : ""
-  const loc = [invite.tempatResepsi, invite.alamatResepsi].filter(Boolean).join(", ")
+  const day = (invite.tanggalAkad || "").replace(/-/g, "")
+  const dates = day ? `${day}/${nextDay(invite.tanggalAkad)}` : ""
+  const loc = [invite.tempatAkad, invite.alamatAkad].filter(Boolean).join(", ")
+  const beda = tanggalResepsiBerlaku(invite) !== invite.tanggalAkad
   const details = [
     invite.waktuAkad ? `Akad ${invite.waktuAkad} — ${invite.tempatAkad || ""}` : "",
-    invite.waktuResepsi ? `Resepsi ${invite.waktuResepsi} — ${invite.tempatResepsi || ""}` : "",
+    invite.waktuResepsi
+      ? `Resepsi${beda ? ` ${tanggalResepsiBerlaku(invite) || ""}` : ""} ${invite.waktuResepsi} — ${invite.tempatResepsi || ""}`
+      : "",
   ].filter(Boolean).join("\n")
   const q = new URLSearchParams({
     action: "TEMPLATE",

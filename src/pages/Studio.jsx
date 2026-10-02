@@ -1,7 +1,9 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from "react"
 import { Link, useParams, useSearchParams } from "react-router-dom"
 import { getCatalog } from "../data/catalogs"
-import { demoInvite } from "../data/demoInvite"
+import { demoInvite, hariDari, tanggalResepsiBerlaku } from "../data/demoInvite"
+import { songs } from "../data/songs"
+import ColorPicker from "../components/ColorPicker"
 import { revokePhoto } from "../lib/photos"
 import PhotoSlot from "../components/PhotoSlot"
 import InviteFrame from "../components/InviteFrame"
@@ -13,7 +15,7 @@ import "./Studio.css"
 const DRAFT_KEY = (id) => `bersemi-draft-${id}`
 const themes = { minimal: Minimal }
 const emptyPhotos = () => ({
-  cover: null, hero: null, names: null, ayat: null, pria: null, wanita: null,
+  cover: null, hero: null, names: null, pria: null, wanita: null,
   save: null, venue: null, events: null, love: null, rsvp: null, close: null,
   gallery: [null, null, null, null, null, null],
 })
@@ -35,7 +37,6 @@ const DEVICES = [
 const PHOTO_SLOTS = [
   { key: "wanita", title: "Mempelai wanita", ratio: "4 / 5" },
   { key: "pria", title: "Mempelai pria", ratio: "4 / 5" },
-  { key: "ayat", title: "Sampul / ayat", ratio: "4 / 3" },
   { key: "close", title: "Penutup", ratio: "4 / 3" },
   { key: "venue", title: "Lokasi acara", ratio: "4 / 3" },
 ]
@@ -62,6 +63,7 @@ export default function Studio() {
   const [mode, setMode] = useState(getTheme)
   const [open, setOpen] = useState(true)
   const [pick, setPick] = useState(null)
+  const [customOpen, setCustomOpen] = useState(false)
   const [ink, setInk] = useState(0)
   const [customHex, setCustomHex] = useState("")
   const [song, setSong] = useState(0)
@@ -106,7 +108,16 @@ export default function Studio() {
     if (!raw) return
     try {
       const d = JSON.parse(raw)
-      if (d.invite) setInvite((c) => ({ ...c, ...d.invite, guest: params.get("to") || d.invite.guest || c.guest }))
+      if (d.invite) {
+        const di = { ...d.invite }
+        // migrasi draf lama: tanggal -> tanggalAkad, urutan "Putri pertama dari" -> "pertama"
+        if (di.tanggal && !di.tanggalAkad) di.tanggalAkad = di.tanggal
+        delete di.tanggal
+        const ord = (v, kata) => (v || "").replace(new RegExp(`^${kata}\\s*`, "i"), "").replace(/\s*dari\s*$/i, "").trim()
+        if (/dari\s*$/i.test(di.urutanWanita || "")) di.urutanWanita = ord(di.urutanWanita, "putri")
+        if (/dari\s*$/i.test(di.urutanPria || "")) di.urutanPria = ord(di.urutanPria, "putra")
+        setInvite((c) => ({ ...c, ...di, guest: params.get("to") || di.guest || c.guest }))
+      }
       if (typeof d.ink === "number") setInk(d.ink)
       if (d.customHex) setCustomHex(d.customHex)
       if (typeof d.song === "number") setSong(d.song)
@@ -128,10 +139,6 @@ export default function Studio() {
   const inks = tema?.inks || [
     { id: "a", name: "Gelap", hex: "#161412" },
     { id: "b", name: "Hati", hex: "#b33434" },
-  ]
-  const songs = tema?.songs || [
-    { id: "piano", name: "Piano", file: "music/hitam-putih.mp3" },
-    { id: "sinden", name: "Sinden", file: "music/tema-2.mp3" },
   ]
   const songIdx = songs[song] ? song : 0
   const primary = customHex || inks[ink]?.hex
@@ -215,6 +222,7 @@ export default function Studio() {
 
   function go(next) {
     setPick(null)
+    setCustomOpen(false)
     setAlert("")
     setStep(next)
   }
@@ -222,7 +230,8 @@ export default function Studio() {
   function submitOrder() {
     const missing = []
     if (!invite.wanita.trim() || !invite.pria.trim()) missing.push("nama pasangan")
-    if (!invite.tanggal) missing.push("tanggal")
+    if (!invite.tanggalAkad) missing.push("tanggal akad")
+    if (invite.resepsiSama === false && !invite.tanggalResepsi) missing.push("tanggal resepsi")
     if (!order.pemesan.trim()) missing.push("nama pemesan")
     if (!order.wa.trim()) missing.push("WhatsApp")
     if (missing.length) {
@@ -234,7 +243,8 @@ export default function Studio() {
       temaId: tema.id,
       temaNama: tema.name,
       pasangan: `${invite.wanita} & ${invite.pria}`,
-      tanggal: invite.tanggal,
+      tanggal: invite.tanggalAkad,
+      tanggalResepsi: tanggalResepsiBerlaku(invite),
       pemesan: order.pemesan,
       wa: order.wa,
       catatan: order.catatan,
@@ -251,9 +261,13 @@ export default function Studio() {
     setDone("Pesanan tersimpan. Admin akan kirim tagihan ke WhatsApp Anda.")
   }
 
-  const hariOtomatis = invite.tanggal
-    ? new Intl.DateTimeFormat("id-ID", { weekday: "long" }).format(new Date(`${invite.tanggal}T00:00:00`))
-    : ""
+  const resepsiSama = invite.resepsiSama !== false
+  const story = invite.loveStory || []
+  const setStory = (i, key, value) => {
+    const next = [...story]
+    next[i] = { ...next[i], [key]: value }
+    setField("loveStory", next)
+  }
 
   const T = (key, label, extra = {}, note = "") => (
     <label className="f-row">
@@ -328,10 +342,20 @@ export default function Studio() {
                       onClick={() => { setInk(i); setCustomHex("") }}
                     />
                   ))}
-                  <label className={customHex ? "swatch custom on" : "swatch custom"} title="Pilih sendiri">
-                    <input type="color" value={customHex || primary || "#0e1a2b"} onChange={(e) => setCustomHex(e.target.value)} />
-                  </label>
+                  <button
+                    type="button"
+                    className={customHex ? "swatch custom on" : "swatch custom"}
+                    style={customHex ? { background: customHex } : undefined}
+                    aria-label="Pilih warna sendiri"
+                    aria-expanded={customOpen}
+                    onClick={() => setCustomOpen((o) => !o)}
+                  />
                 </div>
+                {customOpen && (
+                  <div className="cp-wrap">
+                    <ColorPicker value={customHex || primary || "#0e1a2b"} onChange={setCustomHex} />
+                  </div>
+                )}
               </div>
               <div className="f-row">
                 <span className="f-label">Musik</span>
@@ -358,6 +382,11 @@ export default function Studio() {
             <section className="f-card">
               <header className="f-head"><i><span className="material-symbols-outlined">female</span></i>Mempelai wanita</header>
               {T("wanitaLengkap", "Nama lengkap")}
+              <label className="f-row f-inline">
+                <span className="f-fix">Putri</span>
+                <input className="f-input" value={invite.urutanWanita || ""} onChange={(e) => setField("urutanWanita", e.target.value)} placeholder="pertama" aria-label="Urutan anak wanita, mis. pertama" />
+                <span className="f-fix">dari</span>
+              </label>
               {T("ayahWanita", "Ayah")}
               {T("ibuWanita", "Ibu")}
               {T("igWanita", "Instagram")}
@@ -366,25 +395,32 @@ export default function Studio() {
             <section className="f-card">
               <header className="f-head"><i><span className="material-symbols-outlined">male</span></i>Mempelai pria</header>
               {T("priaLengkap", "Nama lengkap")}
+              <label className="f-row f-inline">
+                <span className="f-fix">Putra</span>
+                <input className="f-input" value={invite.urutanPria || ""} onChange={(e) => setField("urutanPria", e.target.value)} placeholder="pertama" aria-label="Urutan anak pria, mis. pertama" />
+                <span className="f-fix">dari</span>
+              </label>
               {T("ayahPria", "Ayah")}
               {T("ibuPria", "Ibu")}
               {T("igPria", "Instagram")}
             </section>
 
             <section className="f-card">
-              <header className="f-head"><i><span className="material-symbols-outlined">event</span></i>Tanggal acara</header>
-              {T("tanggal", "Tanggal", { type: "date" }, hariOtomatis)}
-            </section>
-
-            <section className="f-card">
               <header className="f-head"><i><span className="material-symbols-outlined">favorite</span></i>Akad nikah</header>
+              {T("tanggalAkad", "Tanggal", { type: "date" }, hariDari(invite.tanggalAkad))}
               {T("waktuAkad", "Pukul")}
               {T("tempatAkad", "Tempat")}
               {T("alamatAkad", "Alamat")}
             </section>
 
             <section className="f-card">
-              <header className="f-head"><i><span className="material-symbols-outlined">celebration</span></i>Resepsi</header>
+              <header className="f-head">
+                <i><span className="material-symbols-outlined">celebration</span></i>Resepsi
+                <button type="button" className={resepsiSama ? "opt on" : "opt"} aria-pressed={resepsiSama} onClick={() => setField("resepsiSama", !resepsiSama)}>
+                  <span className="material-symbols-outlined">{resepsiSama ? "check_box" : "check_box_outline_blank"}</span>Sama dengan akad
+                </button>
+              </header>
+              {!resepsiSama && T("tanggalResepsi", "Tanggal", { type: "date" }, hariDari(invite.tanggalResepsi))}
               {T("waktuResepsi", "Pukul")}
               {T("tempatResepsi", "Tempat")}
               {T("alamatResepsi", "Alamat")}
@@ -392,24 +428,18 @@ export default function Studio() {
 
             <section className="f-card">
               <header className="f-head"><i><span className="material-symbols-outlined">redeem</span></i>Amplop</header>
-              {T("bankNama", "Bank")}
-              {T("bankRek", "Nomor rekening", { inputMode: "numeric" })}
-              {T("bankAn", "Atas nama")}
+              <p className="f-sub">Rekening wanita</p>
+              {T("bankNamaWanita", "Bank")}
+              {T("bankRekWanita", "Nomor rekening", { inputMode: "numeric" })}
+              {T("bankAnWanita", "Atas nama")}
+              <p className="f-sub">Rekening pria</p>
+              {T("bankNamaPria", "Bank")}
+              {T("bankRekPria", "Nomor rekening", { inputMode: "numeric" })}
+              {T("bankAnPria", "Atas nama")}
+              <p className="f-sub">Kirim kado fisik</p>
+              {T("giftRumah", "Nama penerima / rumah")}
+              {T("alamatKado", "Alamat")}
             </section>
-
-            <section className="f-card">
-              <header className="f-head"><i><span className="material-symbols-outlined">more_horiz</span></i>Lainnya</header>
-              {T("alamatKado", "Alamat kirim kado")}
-              {extra.includes("giftRumah") && T("giftRumah", "Nama rumah / penerima kado")}
-            </section>
-
-            {extra.includes("urutan") && (
-              <section className="f-card">
-                <header className="f-head"><i><span className="material-symbols-outlined">family_restroom</span></i>Urutan anak</header>
-                {T("urutanWanita", "Wanita, mis. Putri pertama dari")}
-                {T("urutanPria", "Pria, mis. Putra kedua dari")}
-              </section>
-            )}
 
             {extra.includes("streaming") && (
               <section className="f-card">
@@ -437,35 +467,33 @@ export default function Studio() {
                   </button>
                 </header>
                 {invite.loveOn !== false && (
-                  <>
-                    {(invite.loveStory || []).map((row, i) => (
-                      <div className="f-story" key={i}>
-                        <input value={row.judul} onChange={(e) => {
-                          const next = [...invite.loveStory]
-                          next[i] = { ...next[i], judul: e.target.value }
-                          setField("loveStory", next)
-                        }} placeholder="Judul" />
-                        <input value={row.tahun} onChange={(e) => {
-                          const next = [...invite.loveStory]
-                          next[i] = { ...next[i], tahun: e.target.value }
-                          setField("loveStory", next)
-                        }} placeholder="Tahun" />
-                        <textarea value={row.teks} onChange={(e) => {
-                          const next = [...invite.loveStory]
-                          next[i] = { ...next[i], teks: e.target.value }
-                          setField("loveStory", next)
-                        }} placeholder="Cerita" rows={2} />
-                        {(invite.loveStory || []).length > 2 && (
-                          <button type="button" className="opt" onClick={() => setField("loveStory", invite.loveStory.filter((_, x) => x !== i))}>Hapus</button>
-                        )}
-                      </div>
-                    ))}
-                    {(invite.loveStory || []).length < 4 && (
-                      <button type="button" className="opt" onClick={() => setField("loveStory", [...(invite.loveStory || []), { tahun: "", judul: "", teks: "" }])}>
-                        Tambah cerita
+                  <div className="ls">
+                    <ol className="ls-list">
+                      {story.map((row, i) => (
+                        <li className="ls-item" key={i}>
+                          <span className="ls-no">{i + 1}</span>
+                          <div className="ls-body">
+                            <div className="ls-top">
+                              <input className="ls-year" inputMode="numeric" maxLength={4} value={row.tahun || ""} onChange={(e) => setStory(i, "tahun", e.target.value.replace(/\D/g, ""))} placeholder="Tahun" aria-label={`Tahun cerita ${i + 1}`} />
+                              <input className="ls-title" value={row.judul || ""} onChange={(e) => setStory(i, "judul", e.target.value)} placeholder="Judul, mis. Awal bertemu" aria-label={`Judul cerita ${i + 1}`} />
+                              {story.length > 2 && (
+                                <button type="button" className="ls-del" aria-label={`Hapus cerita ${i + 1}`} onClick={() => setField("loveStory", story.filter((_, x) => x !== i))}>
+                                  <span className="material-symbols-outlined">delete</span>
+                                </button>
+                              )}
+                            </div>
+                            <textarea className="ls-text" rows={3} maxLength={200} value={row.teks || ""} onChange={(e) => setStory(i, "teks", e.target.value)} placeholder="Ceritakan singkat momen ini" aria-label={`Cerita ${i + 1}`} />
+                            <span className="ls-count">{(row.teks || "").length}/200</span>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                    {story.length < 4 && (
+                      <button type="button" className="ls-add" onClick={() => setField("loveStory", [...story, { tahun: "", judul: "", teks: "" }])}>
+                        <span className="material-symbols-outlined">add</span>Tambah cerita<em>{story.length}/4</em>
                       </button>
                     )}
-                  </>
+                  </div>
                 )}
               </section>
             )}
@@ -584,27 +612,31 @@ export default function Studio() {
       {step === "demo" && (
         <div className={chromeVisible ? "dock-color-item" : "dock-color-item hide"}>
           {pick === "warna" && (
-            <div className="dock-pop" role="menu">
-              {inks.map((c, i) => (
+            <div className={customOpen ? "dock-pop open" : "dock-pop"} role="menu">
+              <div className="dock-pop-row">
+                {inks.map((c, i) => (
+                  <button
+                    key={c.id}
+                    type="button"
+                    className={!customHex && i === ink ? "swatch on" : "swatch"}
+                    style={{ background: c.hex }}
+                    aria-label={c.name}
+                    onClick={() => { setInk(i); setCustomHex(""); setCustomOpen(false); setPick(null) }}
+                  />
+                ))}
                 <button
-                  key={c.id}
                   type="button"
-                  className={!customHex && i === ink ? "swatch on" : "swatch"}
-                  style={{ background: c.hex }}
-                  aria-label={c.name}
-                  onClick={() => { setInk(i); setCustomHex(""); setPick(null) }}
+                  className={customHex ? "swatch custom on" : "swatch custom"}
+                  style={customHex ? { background: customHex } : undefined}
+                  aria-label="Pilih warna sendiri"
+                  aria-expanded={customOpen}
+                  onClick={() => setCustomOpen((o) => !o)}
                 />
-              ))}
-              <label className="swatch custom" title="Pilih sendiri">
-                <input
-                  type="color"
-                  value={customHex || primary || "#0e1a2b"}
-                  onChange={(e) => setCustomHex(e.target.value)}
-                />
-              </label>
+              </div>
+              {customOpen && <ColorPicker value={customHex || primary || "#0e1a2b"} onChange={setCustomHex} />}
             </div>
           )}
-          <button type="button" className="dock-color" aria-label="Warna" onClick={() => setPick(pick === "warna" ? null : "warna")}>
+          <button type="button" className="dock-color" aria-label="Warna" onClick={() => { setPick(pick === "warna" ? null : "warna"); setCustomOpen(false) }}>
             <span className="material-symbols-outlined">palette</span>
           </button>
         </div>

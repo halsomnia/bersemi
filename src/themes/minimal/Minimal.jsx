@@ -1,5 +1,6 @@
+import { useState } from "react"
 import Countdown from "../../components/Countdown"
-import { formatTanggalPanjang } from "../../data/demoInvite"
+import { formatTanggalPanjang, tanggalResepsiBerlaku } from "../../data/demoInvite"
 import { googleCalendarUrl } from "../../lib/calendar"
 import "./Minimal.css"
 
@@ -10,6 +11,33 @@ function mapsUrl(place, address) {
 function Bg({ photo, className, children }) {
   const style = photo?.url ? { backgroundImage: `url(${photo.url})` } : undefined
   return <section className={className} style={style}>{children}</section>
+}
+
+function dari(kata, urutan) {
+  return [kata, (urutan || "").trim(), "dari"].filter(Boolean).join(" ").toUpperCase()
+}
+
+function Rekening({ label, bank, rek, nama }) {
+  const [ok, setOk] = useState(false)
+  if (!rek) return null
+
+  async function salin() {
+    try {
+      await navigator.clipboard.writeText(String(rek).replace(/\s/g, ""))
+      setOk(true)
+      setTimeout(() => setOk(false), 1600)
+    } catch { /* clipboard tidak tersedia */ }
+  }
+
+  return (
+    <div className="mn-acc">
+      <p className="mn-acc-label">{label}</p>
+      <p className="mn-acc-bank">{bank}</p>
+      <p className="mn-acc-no">{rek}</p>
+      <p className="mn-acc-name">a.n. {nama}</p>
+      <button type="button" className="mn-acc-copy" onClick={salin}>{ok ? "Tersalin" : "Salin nomor"}</button>
+    </div>
+  )
 }
 
 function Divider() {
@@ -29,7 +57,9 @@ export default function Minimal({
   onRsvp,
   wishes = [],
 }) {
-  const tanggal = formatTanggalPanjang(invite.tanggal)
+  const tanggal = formatTanggalPanjang(invite.tanggalAkad)
+  const tglResepsi = formatTanggalPanjang(tanggalResepsiBerlaku(invite))
+  const sama = invite.resepsiSama !== false
   const g = photos.gallery || []
   const story = (invite.loveStory || []).slice(0, 4)
   const cal = googleCalendarUrl(invite)
@@ -61,7 +91,9 @@ export default function Minimal({
             <h2 className="mn-script lg">{invite.wanita} &amp; {invite.pria}</h2>
             <p className="mn-date">{tanggal}</p>
             <Divider />
-            <p className="mn-place">{invite.tempatResepsi}<br />{invite.alamatResepsi}</p>
+            <p className="mn-place">
+              {sama ? invite.tempatResepsi : invite.tempatAkad}<br />{sama ? invite.alamatResepsi : invite.alamatAkad}
+            </p>
           </Bg>
 
           <section className="mn-quote">
@@ -69,12 +101,10 @@ export default function Minimal({
             <cite>{invite.ayatRef || "Q.S Ar-Rum: 21"}</cite>
           </section>
 
-          <Bg photo={photos.ayat} className="mn-band" />
-
           <Bg photo={photos.wanita} className="mn-person">
             <p className="mn-small">The Bride</p>
             <h2 className="mn-script">{invite.wanitaLengkap || invite.wanita}</h2>
-            <p className="mn-from">{(invite.urutanWanita || "Putri dari").toUpperCase()}</p>
+            <p className="mn-from">{dari("Putri", invite.urutanWanita)}</p>
             <Divider />
             <p className="mn-ortu">{invite.ayahWanita} &amp; {invite.ibuWanita}</p>
           </Bg>
@@ -82,14 +112,14 @@ export default function Minimal({
           <Bg photo={photos.pria} className="mn-person">
             <p className="mn-small">The Groom</p>
             <h2 className="mn-script">{invite.priaLengkap || invite.pria}</h2>
-            <p className="mn-from">{(invite.urutanPria || "Putra dari").toUpperCase()}</p>
+            <p className="mn-from">{dari("Putra", invite.urutanPria)}</p>
             <Divider />
             <p className="mn-ortu">{invite.ayahPria} &amp; {invite.ibuPria}</p>
           </Bg>
 
           <section className="mn-save">
             <p className="mn-script mid">Save the Date</p>
-            <Countdown iso={invite.tanggal} units="short" />
+            <Countdown iso={invite.tanggalAkad} units="short" />
             <a className="mn-btn light" href={cal} target="_blank" rel="noreferrer">Simpan Tanggal</a>
           </section>
 
@@ -104,7 +134,7 @@ export default function Minimal({
             </div>
             <div className="mn-card">
               <h3 className="mn-script mid">Resepsi</h3>
-              <p>{tanggal}</p>
+              <p>{tglResepsi}</p>
               <p>{invite.waktuResepsi}</p>
               <Divider />
               <p className="mn-place">{invite.tempatResepsi}<br />{invite.alamatResepsi}</p>
@@ -169,8 +199,17 @@ export default function Minimal({
           <section className="mn-gift">
             <p className="mn-script mid">Gift</p>
             <p className="mn-copy">Tanpa mengurangi rasa hormat, bagi tamu yang ingin mengirimkan hadiah kepada kami dapat mengirimkannya melalui:</p>
-            <p className="mn-bank">{invite.bankNama} — {invite.bankRek}<br />{invite.bankAn}</p>
-            <p className="mn-bank">{invite.giftRumah || invite.bankAn}<br />{invite.alamatKado}</p>
+            <div className="mn-accs">
+              <Rekening label="Mempelai Wanita" bank={invite.bankNamaWanita} rek={invite.bankRekWanita} nama={invite.bankAnWanita} />
+              <Rekening label="Mempelai Pria" bank={invite.bankNamaPria} rek={invite.bankRekPria} nama={invite.bankAnPria} />
+            </div>
+            {invite.alamatKado && (
+              <div className="mn-acc mn-addr">
+                <p className="mn-acc-label">Kirim Kado</p>
+                <p className="mn-acc-bank">{invite.giftRumah}</p>
+                <p className="mn-acc-name">{invite.alamatKado}</p>
+              </div>
+            )}
           </section>
 
           <Bg photo={photos.close} className="mn-thanks">
@@ -178,7 +217,9 @@ export default function Minimal({
             <p className="mn-copy">Merupakan suatu kebahagiaan dan kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir di hari bahagia kami.</p>
           </Bg>
 
-          <footer className="mn-foot">Bersemi</footer>
+          <footer className="mn-foot">
+            <img src={`${import.meta.env.BASE_URL}bersemi.svg`} alt="Bersemi" draggable="false" />
+          </footer>
         </>
       )}
     </article>

@@ -20,6 +20,8 @@ Revisi: sebut kode aturan (mis. **D-3**), catat di §11.
 | Form Studio + dock | `src/pages/Studio.jsx` + `.css` |
 | Pesanan / Bantuan | `src/pages/PesananSaya.*` / `Bantuan.*` |
 | Daftar tema, harga, field ekstra | `src/data/catalogs.js` |
+| Daftar musik (global, semua tema) | `src/data/songs.js` + `public/music/musik_1.mp3`, `musik_2.mp3` |
+| Pemilih warna (Isi data + Pratinjau) | `src/components/ColorPicker.*` |
 | Isi contoh undangan | `src/data/demoInvite.js` |
 | Tampilan undangan | `src/themes/<nama>/` |
 | Aturan produk | `RULES.md` |
@@ -129,6 +131,12 @@ Nama tamu `?to=` setelah link live, bukan di form Studio.
 
 - App UI bukan tema. Palet/font/ornamen tema bebas (open source).
 - Field ekstra tema di `catalogs.js` → `form.extras` / `form.photos` / `form.galleryCount`.
+- **Tanggal**: form Akad dan Resepsi masing-masing punya tanggal; Resepsi punya tombol "Sama dengan akad" (default aktif). Yang tampil di cover, hero, save the date, countdown, kalender, dan live adalah **tanggal akad**. Kartu Resepsi memakai tanggal resepsi.
+- **Putra/Putri**: pelanggan hanya mengetik urutan (pertama, kedua, dst); tampil "Putra pertama dari" + nama orang tua dari form. Tidak diisi otomatis.
+- **Amplop**: dua rekening (wanita, pria) + alamat kirim kado fisik. Sisi rekening yang kosong tidak tampil.
+- **Musik**: global untuk semua tema: Musik 1, Musik 2 (`musik_1.mp3`, `musik_2.mp3`) + Unggah. Bukan per tema.
+- **Foto ayat**: tidak ada. Tidak ada slot unggah dan tidak ada strip foto di bawah ayat.
+- **Footer tema**: logo `bersemi.svg` putih di pita merah, tanpa teks (pengecualian B-5 karena berada di file tema).
 - **Minimal**: cover → wedding of → ayat → bride → groom → save the date + Google Calendar → akad/resepsi → live opsional → love story 2-4 opsional → galeri 6 → rsvp & doa → gift → thank you → footer Bersemi.
 - Tema 3 sudah dihapus. Jangan dikembalikan tanpa keputusan baru.
 - Selesaikan satu tema sebelum tema baru.
@@ -180,3 +188,4 @@ Nama tamu `?to=` setelah link live, bukan di form Studio.
 | 2026-10-02 | Palet terang baru (putih bersih): paper `#FAFAF9`, ink `#1A1A1A`, mute `#6A6A68`, line `#E8E8E6`. Desktop: kolom tengah + bar atas sejajar logo (D-11, D-12), judul Pesanan/Bantuan rata tengah, toggle mode pindah ke sidebar kiri bawah (N-1, P-7). Mark logo di search disembunyikan di desktop. |
 | 2026-10-02 | HP: logo dihapus dari Pesanan dan Bantuan, judul besar rata kiri. Bantuan tanpa subjudul "Pertanyaan Umum" dan "Tampilan", FAQ dalam satu kartu (P-6, P-7). |
 | 2026-10-02 | Menu "Demo" diganti **Pratinjau** (P-3, N-6, N-7, N-10). Pilihan perangkat desktop: Laptop/Tablet/HP sebagai sub-menu di bawah Pratinjau (opsi A). Rail Studio disamakan dengan SideNav. |
+| 2026-10-02 | Isi data: musik global (Musik 1/2 + Unggah, file `musik_1.mp3`/`musik_2.mp3`); picker warna buatan sendiri (sama di desktop dan HP), pil warna Pratinjau terbuka ke samping; Putra/Putri hanya urutan; form Urutan anak dan Tanggal acara dihapus (tanggal pindah ke Akad dan Resepsi, tampil tanggal akad); Amplop = dua rekening + alamat kado; Love story didesain ulang; foto ayat dihapus; footer = logo putih tanpa teks (§7). |

@@ -18,7 +18,7 @@ Dua lapisan. Jangan campur.
 - Nama tamu (`?to=`) tidak diedit di studio. Diisi per tautan setelah undangan live.
 - Font, ikon, motif, foto stok, musik tema: boleh dari sumber open source / public domain / lisensi bebas, asal selaras arah tema.
 - Warna tema lewat token CSS (`--bg --surface --ink --accent --mute --line --overlay`) yang hanya menempel di pembungkus pratinjau.
-- Musik tema file statis di `public/music/{id-tema}.mp3`, bukan database.
+- Musik global untuk semua tema: `public/music/musik_1.mp3` dan `musik_2.mp3` (daftar di `src/data/songs.js`), bukan database.
 
 ## C. Studio
 
