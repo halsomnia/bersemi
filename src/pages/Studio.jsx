@@ -3,6 +3,7 @@ import { Link, useParams, useSearchParams } from "react-router-dom"
 import { getCatalog } from "../data/catalogs"
 import { demoInvite, hariDari, tanggalResepsiBerlaku } from "../data/demoInvite"
 import { songs } from "../data/songs"
+import { demoPhotos } from "../data/demoPhotos"
 import ColorPicker from "../components/ColorPicker"
 import { revokePhoto } from "../lib/photos"
 import PhotoSlot from "../components/PhotoSlot"
@@ -73,7 +74,7 @@ export default function Studio() {
     ...demoInvite,
     guest: params.get("to") || demoInvite.guest,
   }))
-  const [photos, setPhotos] = useState(emptyPhotos)
+  const [photos, setPhotos] = useState(() => ({ ...emptyPhotos(), ...(demoPhotos(id) || {}) }))
   const [order, setOrder] = useState({ pemesan: "", wa: "", catatan: "" })
   const [alert, setAlert] = useState("")
   const [done, setDone] = useState("")
