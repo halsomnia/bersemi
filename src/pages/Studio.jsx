@@ -63,8 +63,7 @@ export default function Studio() {
   const [device, setDevice] = useState("desk")
   const [mode, setMode] = useState(getTheme)
   const [open, setOpen] = useState(false)
-  const [pick, setPick] = useState(null)
-  const [customOpen, setCustomOpen] = useState(false)
+    const [customOpen, setCustomOpen] = useState(false)
   const [ink, setInk] = useState(0)
   const [customHex, setCustomHex] = useState("")
   const [song, setSong] = useState(0)
@@ -212,8 +211,7 @@ export default function Studio() {
     if (!file) return
     if (customSong?.url) URL.revokeObjectURL(customSong.url)
     setCustomSong({ url: URL.createObjectURL(file), name: file.name })
-    setPick(null)
-  }
+      }
 
   function toggleMode() {
     const next = mode === "dark" ? "light" : "dark"
@@ -222,8 +220,7 @@ export default function Studio() {
   }
 
   function go(next) {
-    setPick(null)
-    setCustomOpen(false)
+        setCustomOpen(false)
     setAlert("")
     setStep(next)
   }
@@ -624,38 +621,7 @@ export default function Studio() {
         </div>
       </nav>
 
-      {step === "demo" && open && (
-        <div className={chromeVisible ? "dock-color-item" : "dock-color-item hide"}>
-          {pick === "warna" && (
-            <div className={customOpen ? "dock-pop open" : "dock-pop"} role="menu">
-              <div className="dock-pop-row">
-                {inks.map((c, i) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    className={!customHex && i === ink ? "swatch on" : "swatch"}
-                    style={{ background: c.hex }}
-                    aria-label={c.name}
-                    onClick={() => { setInk(i); setCustomHex(""); setCustomOpen(false); setPick(null) }}
-                  />
-                ))}
-                <button
-                  type="button"
-                  className={customHex ? "swatch custom on" : "swatch custom"}
-                  style={customHex ? { background: customHex } : undefined}
-                  aria-label="Pilih warna sendiri"
-                  aria-expanded={customOpen}
-                  onClick={() => setCustomOpen((o) => !o)}
-                />
-              </div>
-              {customOpen && <ColorPicker value={customHex || primary || "#0e1a2b"} onChange={setCustomHex} />}
-            </div>
-          )}
-          <button type="button" className="dock-color" aria-label="Warna" onClick={() => { setPick(pick === "warna" ? null : "warna"); setCustomOpen(false) }}>
-            <span className="material-symbols-outlined">palette</span>
-          </button>
-        </div>
-      )}
+      
 
       
       {step === "demo" && open && (

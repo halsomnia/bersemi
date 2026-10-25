@@ -75,11 +75,15 @@
 }
 
 .mn-cover {
-  min-height: 100dvh;
+  height: 100dvh;
+  max-height: 100dvh;
+  box-sizing: border-box;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding: 40px 24px 44px;
+  padding: clamp(24px, 5vh, 44px) 24px clamp(24px, 5vh, 44px);
   background:
     linear-gradient(180deg, #1c242c 0%, #0b1016 42%, #050608 100%);
 }
@@ -286,7 +290,7 @@
   background: #b33434;
   display: grid;
   place-items: center;
-  padding: 44px 16px 48px;
+  padding: 44px 16px calc(48px + 56px + var(--safe-bottom));
 }
 .mn-foot img {
   height: 22px;
@@ -297,19 +301,19 @@
 
 /* Footer Menu & Halaman Khusus (Tab Nav) */
 .mn-tab-content {
-  padding-bottom: calc(56px + var(--safe-bottom));
+  padding-bottom: 0;
 }
 
 .mn-rsvp-standalone {
-  min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
-  padding: 56px 24px calc(72px + var(--safe-bottom));
+  padding: 56px 24px calc(56px + var(--safe-bottom) + 32px);
 }
 
 .mn-moments-standalone {
-  min-height: 100vh;
+  min-height: 100dvh;
   box-sizing: border-box;
-  padding: 56px 20px calc(72px + var(--safe-bottom));
+  padding: 56px 20px calc(56px + var(--safe-bottom) + 32px);
   background: #0f0f10;
 }
 
@@ -389,16 +393,20 @@
 .mn-ig {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 14px;
-  padding: 6px 14px;
-  border: 0.5px solid rgba(255, 255, 255, 0.25);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
+  justify-content: center;
+  gap: 8px;
+  margin: 16px auto 0;
+  padding: 8px 16px;
+  border: 0.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.45);
   color: var(--mn-ink);
   font-size: 13px;
+  font-family: "Jost", sans-serif;
   text-decoration: none;
   letter-spacing: 0.02em;
+  width: fit-content;
+  max-width: max-content;
   transition: background 0.15s, border-color 0.15s;
 }
 .mn-ig:hover {

@@ -10,7 +10,7 @@
 .preview-wrap {
   min-height: 100dvh;
   background: var(--bg, var(--paper));
-  padding-bottom: calc(78px + var(--safe-bottom));
+  padding-bottom: 0;
 }
 
 .opt {
