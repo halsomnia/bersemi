@@ -574,3 +574,426 @@
   width: 14px;
   height: 14px;
 }
+
+
+/* ==========================================================================
+   Galeri Tamu Undangan & Detail Momen Tamu (Flat Minimalist & Clean)
+   ========================================================================== */
+
+.mn-guest-section {
+  margin-top: 48px;
+  padding-top: 36px;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+
+/* Grid Foto Tamu: 1 baris 2 foto sama persis dengan grid foto pengantin */
+.mn-guest-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: 22px;
+}
+
+.mn-guest-shot {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #1c1c1c;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.mn-guest-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.mn-guest-shot:hover img {
+  transform: scale(1.03);
+  filter: brightness(1.06);
+}
+
+.mn-guest-empty {
+  font-size: 13px;
+  color: var(--mn-mute);
+  text-align: center;
+  padding: 36px 16px;
+  font-style: italic;
+}
+
+/* ==========================================================================
+   Tombol Unggah Melayang (Floating Camera Button di Pojok Kanan)
+   ========================================================================== */
+
+.mn-float-cam {
+  position: fixed;
+  bottom: calc(56px + 16px + var(--safe-bottom, 0px));
+  right: calc(max(16px, 50% - 215px + 16px));
+  width: 50px;
+  height: 50px;
+  background: #18181a;
+  border: 0.5px solid rgba(255, 255, 255, 0.38);
+  border-radius: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 26;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.mn-float-cam:hover {
+  background: #b33434;
+  border-color: #b33434;
+  transform: translateY(-2px);
+}
+
+.mn-float-cam .material-symbols-outlined {
+  font-size: 22px;
+  color: #fff;
+}
+
+.mn-float-cam.done {
+  background: rgba(179, 52, 52, 0.22);
+  border-color: #b33434;
+  color: #fff;
+}
+
+.mn-float-cam.done:hover {
+  background: #b33434;
+}
+
+@media (min-width: 900px) {
+  .invite-frame .mn-float-cam {
+    right: 20px;
+  }
+}
+
+/* ==========================================================================
+   Popup Modal Detail Foto (Lightbox saat foto tamu diklik)
+   ========================================================================== */
+
+.mn-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: mnFadeIn 0.2s ease-out;
+}
+
+@keyframes mnFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mn-detail-sheet {
+  background: #141416;
+  border: 0.5px solid rgba(255, 255, 255, 0.24);
+  max-width: 420px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.8);
+}
+
+.mn-detail-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 0.5px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.mn-detail-close:hover {
+  background: #b33434;
+  border-color: #b33434;
+}
+
+.mn-detail-close .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.mn-detail-media {
+  width: 100%;
+  background: #0c0c0e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mn-detail-media img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  display: block;
+}
+
+.mn-detail-body {
+  padding: 18px 20px 22px;
+  text-align: left;
+}
+
+.mn-detail-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mn-detail-avatar {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  display: grid;
+  place-items: center;
+  color: var(--mn-mute);
+  font-size: 18px;
+  box-sizing: border-box;
+}
+
+.mn-detail-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.mn-detail-time {
+  display: block;
+  font-size: 11px;
+  color: var(--mn-mute);
+  letter-spacing: 0.04em;
+}
+
+.mn-detail-caption {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--mn-ink);
+  font-style: italic;
+  margin-top: 12px;
+  border-left: 2px solid #b33434;
+  padding-left: 12px;
+}
+
+/* ==========================================================================
+   Modal Dialog Unggah Foto Tamu (1 Capture)
+   ========================================================================== */
+
+.mn-modal-sheet {
+  background: #151517;
+  border: 0.5px solid rgba(255, 255, 255, 0.24);
+  max-width: 440px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+}
+
+.mn-modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.14);
+}
+
+.mn-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mn-modal-title-wrap .material-symbols-outlined {
+  font-size: 20px;
+  color: #b33434;
+}
+
+.mn-modal-title-wrap h3 {
+  font-family: "Jost", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+}
+
+.mn-modal-close {
+  background: transparent;
+  border: 0;
+  color: var(--mn-mute);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+.mn-modal-close:hover {
+  color: #fff;
+}
+
+.mn-modal-body {
+  padding: 20px;
+  display: grid;
+  gap: 18px;
+  text-align: left;
+}
+
+.mn-modal-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  font-size: 11.5px;
+  color: var(--mn-mute);
+  line-height: 1.45;
+}
+
+.mn-modal-notice .material-symbols-outlined {
+  font-size: 18px;
+  color: #b33434;
+  flex-shrink: 0;
+}
+
+.mn-modal-group {
+  display: grid;
+  gap: 8px;
+}
+
+.mn-modal-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mn-mute);
+  font-weight: 600;
+}
+
+.mn-photo-slot {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.28);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.mn-photo-slot:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.mn-photo-slot.filled {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.mn-photo-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mn-slot-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--mn-mute);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mn-slot-empty .material-symbols-outlined {
+  font-size: 26px;
+}
+
+.mn-slot-del {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.mn-slot-del:hover {
+  background: #b33434;
+  border-color: #b33434;
+}
+
+.mn-slot-del .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.mn-modal-input {
+  width: 100%;
+  border: 0.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 10px 12px;
+  font-family: "Jost", sans-serif;
+  font-size: 13.5px;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.mn-modal-input:focus {
+  outline: none;
+  border-color: #b33434;
+}
+
+.mn-modal-textarea {
+  resize: vertical;
+}
+
+.mn-modal-error {
+  font-size: 12px;
+  color: #e57373;
+  margin: 0;
+}
+
+.mn-modal-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

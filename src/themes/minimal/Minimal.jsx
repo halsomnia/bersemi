@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Countdown from "../../components/Countdown"
 import { formatTanggalPanjang, tanggalResepsiBerlaku } from "../../data/demoInvite"
 import { googleCalendarUrl } from "../../lib/calendar"
+import { readFileAsDataUrl } from "../../lib/photos"
 import "./Minimal.css"
 
 function mapsUrl(place, address) {
@@ -122,6 +123,206 @@ function IgLink({ username, label }) {
   )
 }
 
+function isAkadPassed(tgl) {
+  if (!tgl) return true
+  try {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const akad = new Date(tgl + "T00:00:00")
+    if (isNaN(akad.getTime())) return true
+    return today >= akad
+  } catch {
+    return true
+  }
+}
+
+function MomentDetailModal({ moment, onClose }) {
+  if (!moment) return null
+  const photo = moment.photo || (moment.photos && moment.photos[0])
+
+  return (
+    <div className="mn-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+      <div className="mn-detail-sheet" onClick={(e) => e.stopPropagation()}>
+        <button type="button" className="mn-detail-close" onClick={onClose} aria-label="Tutup">
+          <span className="material-symbols-outlined">close</span>
+        </button>
+        {photo && (
+          <div className="mn-detail-media">
+            <img src={photo} alt={`Momen dari ${moment.nama}`} />
+          </div>
+        )}
+        <div className="mn-detail-body">
+          <div className="mn-detail-user">
+            <div className="mn-detail-avatar" aria-hidden="true">
+              <span className="material-symbols-outlined">person</span>
+            </div>
+            <div>
+              <b className="mn-detail-name">{moment.nama}</b>
+              <span className="mn-detail-time">{moment.time || "Hari Akad"}</span>
+            </div>
+          </div>
+          {moment.caption && (
+            <p className="mn-detail-caption">“{moment.caption}”</p>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function GuestUploadModal({ isOpen, onClose, defaultName, onAddMoment, isEventStarted, tanggalAkad }) {
+  const [photo, setPhoto] = useState(null)
+  const [nama, setNama] = useState(defaultName || "")
+  const [caption, setCaption] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const fileInputRef = useRef(null)
+
+  useEffect(() => {
+    if (defaultName) setNama(defaultName)
+  }, [defaultName])
+
+  if (!isOpen) return null
+
+  async function handleFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setError("")
+    setLoading(true)
+    try {
+      const dataUrl = await readFileAsDataUrl(file, 960, 0.75)
+      setPhoto(dataUrl)
+    } catch (err) {
+      setError(err.message || "Gagal memproses gambar.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function removePhoto(e) {
+    e.stopPropagation()
+    setPhoto(null)
+    if (fileInputRef.current) fileInputRef.current.value = ""
+  }
+
+  const isReady = nama.trim().length > 0 && Boolean(photo) && !loading
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    if (!nama.trim()) {
+      setError("Silakan masukkan nama Anda.")
+      return
+    }
+    if (!photo) {
+      setError("Silakan pilih foto momen Anda.")
+      return
+    }
+    onAddMoment({
+      id: "guest-" + Date.now(),
+      nama: nama.trim(),
+      photo,
+      caption: caption.trim(),
+      time: "Hari ini",
+    })
+    setPhoto(null)
+    setCaption("")
+    onClose()
+  }
+
+  return (
+    <div className="mn-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+      <div className="mn-modal-sheet" onClick={(e) => e.stopPropagation()}>
+        <div className="mn-modal-head">
+          <div className="mn-modal-title-wrap">
+            <span className="material-symbols-outlined">photo_camera</span>
+            <h3>Unggah Foto Tamu</h3>
+          </div>
+          <button type="button" className="mn-modal-close" onClick={onClose} aria-label="Tutup">
+            <span className="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="mn-modal-body">
+          {!isEventStarted && (
+            <div className="mn-modal-notice">
+              <span className="material-symbols-outlined">schedule</span>
+              <span>Unggah foto momen dibuka pada hari akad (${tanggalAkad}). Anda sedang dalam mode pratinjau.</span>
+            </div>
+          )}
+          <div className="mn-modal-group">
+            <label className="mn-modal-label">Foto Momen (1 Foto)</label>
+            <div
+              className={`mn-photo-slot single-slot${photo ? " filled" : ""}`}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                ref={fileInputRef}
+                onChange={handleFile}
+              />
+              {photo ? (
+                <>
+                  <img src={photo} alt="Foto yang dipilih" />
+                  <button
+                    type="button"
+                    className="mn-slot-del"
+                    onClick={removePhoto}
+                    title="Ganti foto"
+                  >
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                </>
+              ) : (
+                <div className="mn-slot-empty">
+                  <span className="material-symbols-outlined">add_a_photo</span>
+                  <span>Pilih atau Ambil Foto</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="mn-modal-group">
+            <label className="mn-modal-label" htmlFor="guest-name-field">Nama Tamu</label>
+            <input
+              id="guest-name-field"
+              type="text"
+              className="mn-modal-input"
+              value={nama}
+              onChange={(e) => setNama(e.target.value)}
+              placeholder="Nama Anda"
+              required
+            />
+          </div>
+
+          <div className="mn-modal-group">
+            <label className="mn-modal-label" htmlFor="guest-caption-field">Ucapan / Doa Singkat (Opsional)</label>
+            <textarea
+              id="guest-caption-field"
+              className="mn-modal-input mn-modal-textarea"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              placeholder="Tuliskan ucapan atau kenangan singkat..."
+              rows={2}
+            />
+          </div>
+
+          {error && <p className="mn-modal-error">{error}</p>}
+
+          <button
+            type="submit"
+            className="mn-btn full mn-modal-submit"
+            disabled={!isReady}
+          >
+            {loading ? "Memproses Foto..." : "Kirim Foto"}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 export default function Minimal({
   invite,
   photos,
@@ -133,6 +334,65 @@ export default function Minimal({
 }) {
   const [tab, setTab] = useState("undangan")
   const [giftTab, setGiftTab] = useState("bank")
+  const [uploadModalOpen, setUploadModalOpen] = useState(false)
+  const [selectedMoment, setSelectedMoment] = useState(null)
+
+  const momentsKey = `bersemi_guest_moments_${invite.wanita || "minimal"}`
+  const uploadKey = `bersemi_guest_uploaded_${invite.wanita || "minimal"}`
+
+  const [hasUploaded, setHasUploaded] = useState(() => {
+    try {
+      return localStorage.getItem(uploadKey) === "true"
+    } catch {
+      return false
+    }
+  })
+
+  const [guestMoments, setGuestMoments] = useState(() => {
+    try {
+      const saved = localStorage.getItem(momentsKey)
+      if (saved) return JSON.parse(saved)
+    } catch { /* ignore */ }
+    return [
+      {
+        id: "demo-guest-1",
+        nama: "Rian dan Dita",
+        photo: `${import.meta.env.BASE_URL}demo/minimal/galeri-2.jpg`,
+        caption: "Selamat menempuh hidup baru Alya dan Raka! Bahagia dan berkah selalu.",
+        time: "Hari Akad",
+      },
+      {
+        id: "demo-guest-2",
+        nama: "Bima dan Rekan",
+        photo: `${import.meta.env.BASE_URL}demo/minimal/galeri-4.jpg`,
+        caption: "Happy wedding bro Raka dan Alya! Langgeng sampai kakek nenek.",
+        time: "Hari Akad",
+      },
+    ]
+  })
+
+  const isEventStarted = isAkadPassed(invite.tanggalAkad)
+
+  function handleAddMoment(moment) {
+    setGuestMoments((prev) => {
+      const next = [moment, ...prev]
+      try {
+        localStorage.setItem(momentsKey, JSON.stringify(next))
+      } catch { /* storage quota */ }
+      return next
+    })
+    try {
+      localStorage.setItem(uploadKey, "true")
+    } catch { /* ignore */ }
+    setHasUploaded(true)
+  }
+
+  function handleResetUpload() {
+    try {
+      localStorage.removeItem(uploadKey)
+    } catch { /* ignore */ }
+    setHasUploaded(false)
+  }
   const tanggal = formatTanggalPanjang(invite.tanggalAkad)
   const tglResepsi = formatTanggalPanjang(tanggalResepsiBerlaku(invite))
   const sama = invite.resepsiSama !== false
@@ -358,8 +618,8 @@ export default function Minimal({
           {tab === "galeri" && (
             <div className="mn-tab-content">
               <section className="mn-moments mn-moments-standalone">
-                <p className="mn-small">Koleksi Foto</p>
-                <p className="mn-script mid">Our Moments</p>
+                <p className="mn-small">Momen Bahagia</p>
+                <h2 className="mn-script mid">{invite.wanita} &amp; {invite.pria}</h2>
                 <Divider />
                 <div className="mn-grid">
                   {[0, 1, 2, 3, 4, 5].map((i) => (
@@ -368,7 +628,78 @@ export default function Minimal({
                     </div>
                   ))}
                 </div>
+
+                <div className="mn-guest-section">
+                  <p className="mn-small">Momen Bersama</p>
+                  <h3 className="mn-script mid">Tamu Undangan</h3>
+                  <Divider />
+
+                  <div className="mn-grid mn-guest-grid">
+                    {guestMoments.map((m) => {
+                      const p = m.photo || (m.photos && m.photos[0])
+                      return (
+                        <div
+                          key={m.id}
+                          className="mn-shot mn-guest-shot"
+                          onClick={() => setSelectedMoment(m)}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Lihat foto momen dari ${m.nama}`}
+                        >
+                          {p ? (
+                            <img src={p} alt={`Momen dari ${m.nama}`} loading="lazy" />
+                          ) : (
+                            <span>Foto Tamu</span>
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {guestMoments.length === 0 && (
+                    <p className="mn-guest-empty">
+                      Belum ada foto momen tamu. Jadilah yang pertama membagikan momen!
+                    </p>
+                  )}
+                </div>
               </section>
+
+              {/* Tombol Unggah Melayang di Pojok Kanan */}
+              {hasUploaded ? (
+                <button
+                  type="button"
+                  className="mn-float-cam done"
+                  onClick={handleResetUpload}
+                  title="Foto Anda terkirim. Klik untuk reset uji coba"
+                  aria-label="Foto Anda terkirim. Klik untuk reset uji coba"
+                >
+                  <span className="material-symbols-outlined">check</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="mn-float-cam"
+                  onClick={() => setUploadModalOpen(true)}
+                  title="Unggah Foto Momen"
+                  aria-label="Unggah Foto Momen"
+                >
+                  <span className="material-symbols-outlined">photo_camera</span>
+                </button>
+              )}
+
+              <GuestUploadModal
+                isOpen={uploadModalOpen}
+                onClose={() => setUploadModalOpen(false)}
+                defaultName={invite.guest && invite.guest !== "Tamu Undangan" ? invite.guest : ""}
+                onAddMoment={handleAddMoment}
+                isEventStarted={isEventStarted}
+                tanggalAkad={tanggal}
+              />
+
+              <MomentDetailModal
+                moment={selectedMoment}
+                onClose={() => setSelectedMoment(null)}
+              />
             </div>
           )}
 

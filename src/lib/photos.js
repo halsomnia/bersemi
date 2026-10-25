@@ -43,3 +43,32 @@ export function compressPhoto(file, max = 1600, quality = 0.82) {
 export function revokePhoto(photo) {
   if (photo?.url?.startsWith("blob:")) URL.revokeObjectURL(photo.url)
 }
+
+export function readFileAsDataUrl(file, max = 800, quality = 0.72) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) {
+      reject(new Error("Bukan berkas gambar."))
+      return
+    }
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = new Image()
+      img.onload = () => {
+        const scale = Math.min(1, max / Math.max(img.width, img.height))
+        const width = Math.max(1, Math.round(img.width * scale))
+        const height = Math.max(1, Math.round(img.height * scale))
+        const canvas = document.createElement("canvas")
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext("2d")
+        ctx.drawImage(img, 0, 0, width, height)
+        const dataUrl = canvas.toDataURL("image/jpeg", quality)
+        resolve(dataUrl)
+      }
+      img.onerror = () => reject(new Error("Gambar tidak bisa dibaca."))
+      img.src = e.target.result
+    }
+    reader.onerror = () => reject(new Error("Gagal membaca berkas."))
+    reader.readAsDataURL(file)
+  })
+}
