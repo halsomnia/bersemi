@@ -573,7 +573,26 @@
   transform: scale(0.92);
 }
 .fab-isi {
-  bottom: calc(72px + var(--safe-bottom));
+  bottom: calc(68px + var(--safe-bottom));
+  left: 50%;
+  right: auto;
+  width: auto;
+  height: 40px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  box-shadow: none;
+  transform: translateX(-50%);
+}
+.fab-isi .material-symbols-outlined {
+  font-size: 20px;
+}
+.fab-isi:active {
+  transform: translateX(-50%) scale(0.95);
 }
 .fab-order {
   bottom: calc(24px + var(--safe-bottom));
@@ -582,6 +601,9 @@
   transform: translateY(28px) scale(0.85);
   opacity: 0;
   pointer-events: none;
+}
+.fab-isi.hide {
+  transform: translate(-50%, 28px) scale(0.85);
 }
 
 .sheet-top-nav {

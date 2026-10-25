@@ -635,6 +635,7 @@ export default function Studio() {
           onClick={() => go("isi")}
         >
           <span className="material-symbols-outlined">edit_note</span>
+          <span>Isi Data</span>
         </button>
       )}
 
