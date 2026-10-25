@@ -14,9 +14,11 @@ export const demoInvite = {
   waktuAkad: "10.00 WIB",
   tempatAkad: "Masjid Al-Hikmah",
   alamatAkad: "Jl. Cendana No. 12, Bandung",
+  mapsAkad: "https://maps.google.com/?q=Masjid+Al-Hikmah+Bandung",
   waktuResepsi: "12.00 WIB",
   tempatResepsi: "The Sage Hall",
   alamatResepsi: "Jl. Ir. H. Djuanda No. 88, Bandung",
+  mapsResepsi: "https://maps.google.com/?q=The+Sage+Hall+Bandung",
   ayatType: "islami",
   ayatRef: "QS. Ar-Rum: 21",
   ayat:

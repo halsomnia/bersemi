@@ -17,7 +17,7 @@ function dari(kata, urutan) {
   return [kata, (urutan || "").trim(), "dari"].filter(Boolean).join(" ").toUpperCase()
 }
 
-function Rekening({ label, bank, rek, nama }) {
+function RekeningItem({ label, bank, rek, nama }) {
   const [ok, setOk] = useState(false)
   if (!rek) return null
 
@@ -30,12 +30,64 @@ function Rekening({ label, bank, rek, nama }) {
   }
 
   return (
-    <div className="mn-acc">
-      <p className="mn-acc-label">{label}</p>
-      <p className="mn-acc-bank">{bank}</p>
-      <p className="mn-acc-no">{rek}</p>
-      <p className="mn-acc-name">a.n. {nama}</p>
-      <button type="button" className="mn-acc-copy" onClick={salin}>{ok ? "Tersalin" : "Salin nomor"}</button>
+    <div className="mn-acc-card">
+      <div className="mn-acc-top">
+        <span className="mn-acc-bank-tag">{bank}</span>
+        <span className="mn-acc-label-tag">{label}</span>
+      </div>
+      <div className="mn-acc-mid">
+        <div>
+          <div className="mn-acc-digits">{rek}</div>
+          <div className="mn-acc-holder">a.n. {nama}</div>
+        </div>
+        <button
+          type="button"
+          className={`mn-acc-btn${ok ? " ok" : ""}`}
+          onClick={salin}
+          title="Salin nomor rekening"
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: 15 }}>
+            {ok ? "check" : "content_copy"}
+          </span>
+          <span>{ok ? "Tersalin" : "Salin"}</span>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+function AlamatKadoItem({ rumah, alamat }) {
+  const [ok, setOk] = useState(false)
+  if (!alamat) return null
+
+  async function salin() {
+    try {
+      await navigator.clipboard.writeText(`${rumah ? `${rumah}\n` : ""}${alamat}`)
+      setOk(true)
+      setTimeout(() => setOk(false), 1600)
+    } catch { /* clipboard tidak tersedia */ }
+  }
+
+  return (
+    <div className="mn-kado-card">
+      <div className="mn-kado-header">
+        <span className="mn-kado-title">Kirim Kado Fisik</span>
+        {rumah && <span className="mn-kado-target">{rumah}</span>}
+      </div>
+      <div className="mn-kado-body">
+        <p>{alamat}</p>
+      </div>
+      <button
+        type="button"
+        className={`mn-acc-btn${ok ? " ok" : ""}`}
+        onClick={salin}
+        title="Salin alamat pengiriman"
+      >
+        <span className="material-symbols-outlined" style={{ fontSize: 15 }}>
+          {ok ? "check" : "content_copy"}
+        </span>
+        <span>{ok ? "Tersalin" : "Salin Alamat"}</span>
+      </button>
     </div>
   )
 }
@@ -80,12 +132,15 @@ export default function Minimal({
   wishes = [],
 }) {
   const [tab, setTab] = useState("undangan")
+  const [giftTab, setGiftTab] = useState("bank")
   const tanggal = formatTanggalPanjang(invite.tanggalAkad)
   const tglResepsi = formatTanggalPanjang(tanggalResepsiBerlaku(invite))
   const sama = invite.resepsiSama !== false
   const g = photos.gallery || []
   const story = (invite.loveStory || []).slice(0, 4)
   const cal = googleCalendarUrl(invite)
+  const hasBank = !!(invite.bankRekWanita || invite.bankRekPria)
+  const hasKado = !!(invite.alamatKado)
 
   function sendRsvp() {
     onRsvp("kirim")
@@ -164,7 +219,7 @@ export default function Minimal({
                   <p>{invite.waktuAkad}</p>
                   <Divider />
                   <p className="mn-place">{invite.tempatAkad}<br />{invite.alamatAkad}</p>
-                  <a className="mn-btn" href={mapsUrl(invite.tempatAkad, invite.alamatAkad)} target="_blank" rel="noreferrer">Lihat Lokasi</a>
+                  <a className="mn-btn" href={invite.mapsAkad || mapsUrl(invite.tempatAkad, invite.alamatAkad)} target="_blank" rel="noreferrer">Lihat Lokasi</a>
                 </div>
                 <div className="mn-card">
                   <h3 className="mn-script mid">Resepsi</h3>
@@ -172,7 +227,7 @@ export default function Minimal({
                   <p>{invite.waktuResepsi}</p>
                   <Divider />
                   <p className="mn-place">{invite.tempatResepsi}<br />{invite.alamatResepsi}</p>
-                  <a className="mn-btn" href={mapsUrl(invite.tempatResepsi, invite.alamatResepsi)} target="_blank" rel="noreferrer">Lihat Lokasi</a>
+                  <a className="mn-btn" href={(sama ? invite.mapsAkad : invite.mapsResepsi) || mapsUrl(invite.tempatResepsi, invite.alamatResepsi)} target="_blank" rel="noreferrer">Lihat Lokasi</a>
                 </div>
               </Bg>
 
@@ -205,27 +260,68 @@ export default function Minimal({
               <section className="mn-gift">
                 <p className="mn-script mid">Gift</p>
                 <p className="mn-copy">Tanpa mengurangi rasa hormat, bagi tamu yang ingin mengirimkan hadiah kepada kami dapat mengirimkannya melalui:</p>
-                <div className="mn-accs">
-                  <Rekening label="Mempelai Wanita" bank={invite.bankNamaWanita} rek={invite.bankRekWanita} nama={invite.bankAnWanita} />
-                  <Rekening label="Mempelai Pria" bank={invite.bankNamaPria} rek={invite.bankRekPria} nama={invite.bankAnPria} />
-                </div>
-                {invite.alamatKado && (
-                  <div className="mn-acc mn-addr">
-                    <p className="mn-acc-label">Kirim Kado</p>
-                    <p className="mn-acc-bank">{invite.giftRumah}</p>
-                    <p className="mn-acc-name">{invite.alamatKado}</p>
+
+                {hasBank && hasKado && (
+                  <div className="mn-gift-nav">
+                    <button
+                      type="button"
+                      className={giftTab === "bank" ? "mn-gtab on" : "mn-gtab"}
+                      onClick={() => setGiftTab("bank")}
+                    >
+                      <span className="material-symbols-outlined">credit_card</span>
+                      <span>Transfer Bank</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={giftTab === "kado" ? "mn-gtab on" : "mn-gtab"}
+                      onClick={() => setGiftTab("kado")}
+                    >
+                      <span className="material-symbols-outlined">card_giftcard</span>
+                      <span>Kirim Kado</span>
+                    </button>
                   </div>
                 )}
+
+                <div className="mn-gift-content">
+                  {(!hasKado || giftTab === "bank") && hasBank && (
+                    <div className="mn-bank-list">
+                      <RekeningItem label="Mempelai Wanita" bank={invite.bankNamaWanita} rek={invite.bankRekWanita} nama={invite.bankAnWanita} />
+                      <RekeningItem label="Mempelai Pria" bank={invite.bankNamaPria} rek={invite.bankRekPria} nama={invite.bankAnPria} />
+                    </div>
+                  )}
+
+                  {(!hasBank || giftTab === "kado") && hasKado && (
+                    <div className="mn-kado-list">
+                      <AlamatKadoItem rumah={invite.giftRumah} alamat={invite.alamatKado} />
+                    </div>
+                  )}
+                </div>
               </section>
 
               <Bg photo={photos.close} className="mn-thanks">
                 <p className="mn-script mid">Thank You</p>
                 <p className="mn-copy">Merupakan suatu kebahagiaan dan kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir di hari bahagia kami.</p>
-              </Bg>
 
-              <footer className="mn-foot">
-                <img src={`${import.meta.env.BASE_URL}bersemi.svg`} alt="Bersemi" draggable="false" />
-              </footer>
+                <a
+                  className="mn-brand-badge"
+                  href={import.meta.env.BASE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Kunjungi Bersemi"
+                >
+                  <div className="mn-brand-badge-main">
+                    <img
+                      src={`${import.meta.env.BASE_URL}bersemi.svg`}
+                      alt="Bersemi"
+                      className="mn-brand-badge-logo"
+                      draggable="false"
+                    />
+                    <span className="mn-brand-badge-title">Dibuat dengan Bersemi</span>
+                    <span className="material-symbols-outlined mn-brand-badge-arrow">arrow_outward</span>
+                  </div>
+                  <p className="mn-brand-badge-tag">Pilih tema, modifikasi, selesai.</p>
+                </a>
+              </Bg>
             </div>
           )}
 

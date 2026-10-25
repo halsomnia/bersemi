@@ -416,6 +416,7 @@ export default function Studio() {
               {T("waktuAkad", "Pukul")}
               {T("tempatAkad", "Tempat")}
               {T("alamatAkad", "Alamat")}
+              {T("mapsAkad", "Link Google Maps", { type: "url", placeholder: "https://maps.app.goo.gl/..." })}
             </section>
 
             <section className="f-card">
@@ -429,6 +430,7 @@ export default function Studio() {
               {T("waktuResepsi", "Pukul")}
               {T("tempatResepsi", "Tempat")}
               {T("alamatResepsi", "Alamat")}
+              {!resepsiSama && T("mapsResepsi", "Link Google Maps", { type: "url", placeholder: "https://maps.app.goo.gl/..." })}
             </section>
 
             <section className="f-card">
