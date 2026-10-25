@@ -997,3 +997,36 @@
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+.mn-pick-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.mn-pick-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0;
+  color: #fff;
+  font-family: "Jost", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.mn-pick-btn:hover {
+  background: rgba(179, 52, 52, 0.22);
+  border-color: #b33434;
+}
+.mn-pick-btn .material-symbols-outlined {
+  font-size: 17px;
+  color: #b33434;
+}
+.mn-photo-slot.single-slot {
+  cursor: default;
+}

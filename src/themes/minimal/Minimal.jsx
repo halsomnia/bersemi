@@ -170,13 +170,16 @@ function MomentDetailModal({ moment, onClose }) {
   )
 }
 
+const demoGuest = { moments: null, uploaded: false }
+
 function GuestUploadModal({ isOpen, onClose, defaultName, onAddMoment, isEventStarted, tanggalAkad }) {
   const [photo, setPhoto] = useState(null)
   const [nama, setNama] = useState(defaultName || "")
   const [caption, setCaption] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
-  const fileInputRef = useRef(null)
+  const camInputRef = useRef(null)
+  const galInputRef = useRef(null)
 
   useEffect(() => {
     if (defaultName) setNama(defaultName)
@@ -202,24 +205,21 @@ function GuestUploadModal({ isOpen, onClose, defaultName, onAddMoment, isEventSt
   function removePhoto(e) {
     e.stopPropagation()
     setPhoto(null)
-    if (fileInputRef.current) fileInputRef.current.value = ""
+    if (camInputRef.current) camInputRef.current.value = ""
+    if (galInputRef.current) galInputRef.current.value = ""
   }
 
-  const isReady = nama.trim().length > 0 && Boolean(photo) && !loading
+  const isReady = Boolean(photo) && !loading
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (!nama.trim()) {
-      setError("Silakan masukkan nama Anda.")
-      return
-    }
     if (!photo) {
       setError("Silakan pilih foto momen Anda.")
       return
     }
     onAddMoment({
       id: "guest-" + Date.now(),
-      nama: nama.trim(),
+      nama: nama.trim() || "Tamu",
       photo,
       caption: caption.trim(),
       time: "Hari ini",
@@ -246,20 +246,25 @@ function GuestUploadModal({ isOpen, onClose, defaultName, onAddMoment, isEventSt
           {!isEventStarted && (
             <div className="mn-modal-notice">
               <span className="material-symbols-outlined">schedule</span>
-              <span>Unggah foto momen dibuka pada hari akad (${tanggalAkad}). Anda sedang dalam mode pratinjau.</span>
+              <span>Unggah foto momen dibuka pada hari akad ({tanggalAkad}). Anda sedang dalam mode pratinjau.</span>
             </div>
           )}
           <div className="mn-modal-group">
-            <label className="mn-modal-label">Foto Momen (1 Foto)</label>
-            <div
-              className={`mn-photo-slot single-slot${photo ? " filled" : ""}`}
-              onClick={() => fileInputRef.current?.click()}
-            >
+            <label className="mn-modal-label">Foto Momen</label>
+            <div className={`mn-photo-slot single-slot${photo ? " filled" : ""}`}>
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                style={{ display: "none" }}
+                ref={camInputRef}
+                onChange={handleFile}
+              />
               <input
                 type="file"
                 accept="image/*"
                 style={{ display: "none" }}
-                ref={fileInputRef}
+                ref={galInputRef}
                 onChange={handleFile}
               />
               {photo ? (
@@ -277,14 +282,24 @@ function GuestUploadModal({ isOpen, onClose, defaultName, onAddMoment, isEventSt
               ) : (
                 <div className="mn-slot-empty">
                   <span className="material-symbols-outlined">add_a_photo</span>
-                  <span>Pilih atau Ambil Foto</span>
+                  <span>Belum ada foto</span>
                 </div>
               )}
+            </div>
+            <div className="mn-pick-row">
+              <button type="button" className="mn-pick-btn" onClick={() => camInputRef.current?.click()}>
+                <span className="material-symbols-outlined">photo_camera</span>
+                <span>Ambil Foto</span>
+              </button>
+              <button type="button" className="mn-pick-btn" onClick={() => galInputRef.current?.click()}>
+                <span className="material-symbols-outlined">photo_library</span>
+                <span>Dari Galeri</span>
+              </button>
             </div>
           </div>
 
           <div className="mn-modal-group">
-            <label className="mn-modal-label" htmlFor="guest-name-field">Nama Tamu</label>
+            <label className="mn-modal-label" htmlFor="guest-name-field">Nama Tamu (Opsional)</label>
             <input
               id="guest-name-field"
               type="text"
@@ -292,12 +307,11 @@ function GuestUploadModal({ isOpen, onClose, defaultName, onAddMoment, isEventSt
               value={nama}
               onChange={(e) => setNama(e.target.value)}
               placeholder="Nama Anda"
-              required
             />
           </div>
 
           <div className="mn-modal-group">
-            <label className="mn-modal-label" htmlFor="guest-caption-field">Ucapan / Doa Singkat (Opsional)</label>
+            <label className="mn-modal-label" htmlFor="guest-caption-field">Ucapan (Opsional)</label>
             <textarea
               id="guest-caption-field"
               className="mn-modal-input mn-modal-textarea"
@@ -337,62 +351,40 @@ export default function Minimal({
   const [uploadModalOpen, setUploadModalOpen] = useState(false)
   const [selectedMoment, setSelectedMoment] = useState(null)
 
-  const momentsKey = `bersemi_guest_moments_${invite.wanita || "minimal"}`
-  const uploadKey = `bersemi_guest_uploaded_${invite.wanita || "minimal"}`
+  const [hasUploaded, setHasUploaded] = useState(demoGuest.uploaded)
 
-  const [hasUploaded, setHasUploaded] = useState(() => {
-    try {
-      return localStorage.getItem(uploadKey) === "true"
-    } catch {
-      return false
-    }
-  })
-
-  const [guestMoments, setGuestMoments] = useState(() => {
-    try {
-      const saved = localStorage.getItem(momentsKey)
-      if (saved) return JSON.parse(saved)
-    } catch { /* ignore */ }
-    return [
-      {
-        id: "demo-guest-1",
-        nama: "Rian dan Dita",
-        photo: `${import.meta.env.BASE_URL}demo/minimal/galeri-2.jpg`,
-        caption: "Selamat menempuh hidup baru Alya dan Raka! Bahagia dan berkah selalu.",
-        time: "Hari Akad",
-      },
-      {
-        id: "demo-guest-2",
-        nama: "Bima dan Rekan",
-        photo: `${import.meta.env.BASE_URL}demo/minimal/galeri-4.jpg`,
-        caption: "Happy wedding bro Raka dan Alya! Langgeng sampai kakek nenek.",
-        time: "Hari Akad",
-      },
-    ]
-  })
+  const [guestMoments, setGuestMoments] = useState(() => demoGuest.moments || [
+    {
+      id: "demo-guest-1",
+      nama: "Rian dan Dita",
+      photo: `${import.meta.env.BASE_URL}demo/minimal/galeri-2.jpg`,
+      caption: "Selamat menempuh hidup baru Alya dan Raka! Bahagia dan berkah selalu.",
+      time: "Hari Akad",
+    },
+    {
+      id: "demo-guest-2",
+      nama: "Bima dan Rekan",
+      photo: `${import.meta.env.BASE_URL}demo/minimal/galeri-4.jpg`,
+      caption: "Happy wedding bro Raka dan Alya! Langgeng sampai kakek nenek.",
+      time: "Hari Akad",
+    },
+  ])
 
   const isEventStarted = isAkadPassed(invite.tanggalAkad)
 
   function handleAddMoment(moment) {
-    setGuestMoments((prev) => {
-      const next = [moment, ...prev]
-      try {
-        localStorage.setItem(momentsKey, JSON.stringify(next))
-      } catch { /* storage quota */ }
-      return next
-    })
-    try {
-      localStorage.setItem(uploadKey, "true")
-    } catch { /* ignore */ }
+    const next = [moment, ...guestMoments]
+    demoGuest.moments = next
+    demoGuest.uploaded = true
+    setGuestMoments(next)
     setHasUploaded(true)
   }
 
   function handleResetUpload() {
-    try {
-      localStorage.removeItem(uploadKey)
-    } catch { /* ignore */ }
+    demoGuest.uploaded = false
     setHasUploaded(false)
   }
+
   const tanggal = formatTanggalPanjang(invite.tanggalAkad)
   const tglResepsi = formatTanggalPanjang(tanggalResepsiBerlaku(invite))
   const sama = invite.resepsiSama !== false
