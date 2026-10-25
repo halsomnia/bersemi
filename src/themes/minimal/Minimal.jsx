@@ -48,6 +48,28 @@ function Divider() {
   )
 }
 
+function IgLink({ username, label }) {
+  if (!username) return null
+  const handle = username.replace(/^@/, "").trim()
+  if (!handle) return null
+  return (
+    <a
+      className="mn-ig"
+      href={`https://instagram.com/${handle}`}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`Instagram ${label || handle}`}
+    >
+      <svg className="mn-ig-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </svg>
+      <span>@{handle}</span>
+    </a>
+  )
+}
+
 export default function Minimal({
   invite,
   photos,
@@ -80,21 +102,19 @@ export default function Minimal({
 
   return (
     <article className="mn">
-      <Bg photo={photos.cover} className="mn-cover">
-        <p className="mn-small">Undangan Pernikahan</p>
-        <h1 className="mn-script">{invite.wanita} &amp; {invite.pria}</h1>
-        <p className="mn-date">{tanggal}</p>
-        <div className="mn-moon" aria-hidden="true" />
-        <div className="mn-cover-foot">
-          <p className="mn-to">Kepada Yth.</p>
-          <p className="mn-guest">{invite.guest || "Tamu Undangan"}</p>
-          {!open && (
+      {!open ? (
+        <Bg photo={photos.cover} className="mn-cover">
+          <p className="mn-small">Undangan Pernikahan</p>
+          <h1 className="mn-script">{invite.wanita} &amp; {invite.pria}</h1>
+          <p className="mn-date">{tanggal}</p>
+          <div className="mn-moon" aria-hidden="true" />
+          <div className="mn-cover-foot">
+            <p className="mn-to">Kepada Yth.</p>
+            <p className="mn-guest">{invite.guest || "Tamu Undangan"}</p>
             <button type="button" className="mn-btn" onClick={onOpen}>Buka Undangan</button>
-          )}
-        </div>
-      </Bg>
-
-      {open && (
+          </div>
+        </Bg>
+      ) : (
         <>
           {tab === "undangan" && (
             <div className="mn-tab-content">
@@ -119,6 +139,7 @@ export default function Minimal({
                 <p className="mn-from">{dari("Putri", invite.urutanWanita)}</p>
                 <Divider />
                 <p className="mn-ortu">{invite.ayahWanita} &amp; {invite.ibuWanita}</p>
+                <IgLink username={invite.igWanita} label={invite.wanita} />
               </Bg>
 
               <Bg photo={photos.pria} className="mn-person">
@@ -127,6 +148,7 @@ export default function Minimal({
                 <p className="mn-from">{dari("Putra", invite.urutanPria)}</p>
                 <Divider />
                 <p className="mn-ortu">{invite.ayahPria} &amp; {invite.ibuPria}</p>
+                <IgLink username={invite.igPria} label={invite.pria} />
               </Bg>
 
               <section className="mn-save">

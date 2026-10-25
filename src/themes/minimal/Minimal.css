@@ -385,3 +385,27 @@
 .mn-nav-item:focus-visible {
   outline: none;
 }
+
+.mn-ig {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 6px 14px;
+  border: 0.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--mn-ink);
+  font-size: 13px;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: background 0.15s, border-color 0.15s;
+}
+.mn-ig:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.mn-ig-icon {
+  width: 14px;
+  height: 14px;
+}

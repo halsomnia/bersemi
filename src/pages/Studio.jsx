@@ -62,7 +62,7 @@ export default function Studio() {
   const [step, setStep] = useState("demo")
   const [device, setDevice] = useState("desk")
   const [mode, setMode] = useState(getTheme)
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [pick, setPick] = useState(null)
   const [customOpen, setCustomOpen] = useState(false)
   const [ink, setInk] = useState(0)
@@ -624,7 +624,7 @@ export default function Studio() {
         </div>
       </nav>
 
-      {step === "demo" && (
+      {step === "demo" && open && (
         <div className={chromeVisible ? "dock-color-item" : "dock-color-item hide"}>
           {pick === "warna" && (
             <div className={customOpen ? "dock-pop open" : "dock-pop"} role="menu">
@@ -658,7 +658,7 @@ export default function Studio() {
       )}
 
       
-      {step === "demo" && (
+      {step === "demo" && open && (
         <button
           type="button"
           className={chromeVisible ? "fab-btn fab-isi" : "fab-btn fab-isi hide"}
