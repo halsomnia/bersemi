@@ -294,3 +294,94 @@
   filter: brightness(0) invert(1);
   user-select: none;
 }
+
+/* Footer Menu & Halaman Khusus (Tab Nav) */
+.mn-tab-content {
+  padding-bottom: calc(56px + var(--safe-bottom));
+}
+
+.mn-rsvp-standalone {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 56px 24px calc(72px + var(--safe-bottom));
+}
+
+.mn-moments-standalone {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 56px 20px calc(72px + var(--safe-bottom));
+  background: #0f0f10;
+}
+
+.mn-wishes-wrap {
+  margin-top: 28px;
+  text-align: left;
+}
+.mn-wishes-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--mn-mute);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.mn-wishes-empty {
+  font-size: 13px;
+  color: var(--mn-mute);
+  text-align: center;
+  padding: 32px 16px;
+  font-style: italic;
+}
+
+.mn-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 430px;
+  height: 56px;
+  background: #141414; /* solid flat, jangan blur */
+  border-top: 0.5px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 25;
+}
+
+@media (min-width: 900px) {
+  .invite-frame .mn-nav {
+    position: sticky;
+    bottom: 0;
+    max-width: none;
+    width: 100%;
+  }
+}
+
+.mn-nav-item {
+  flex: 1;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--mn-mute);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-family: "Jost", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  user-select: none;
+}
+.mn-nav-item .material-symbols-outlined {
+  font-size: 20px;
+}
+.mn-nav-item.on {
+  color: #b33434;
+  font-weight: 600;
+}
+.mn-nav-item:focus-visible {
+  outline: none;
+}

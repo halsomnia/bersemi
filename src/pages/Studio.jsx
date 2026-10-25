@@ -69,12 +69,12 @@ export default function Studio() {
   const [customHex, setCustomHex] = useState("")
   const [song, setSong] = useState(0)
   const [customSong, setCustomSong] = useState(null)
-  const [muted, setMuted] = useState(false)
+  const [muted] = useState(false)
   const [invite, setInvite] = useState(() => ({
     ...demoInvite,
     guest: params.get("to") || demoInvite.guest,
   }))
-  const [photos, setPhotos] = useState(() => ({ ...emptyPhotos(), ...(demoPhotos(id) || {}) }))
+  const [photos, setPhotos] = useState(() => ({ ...emptyPhotos(), ...demoPhotos(id) }))
   const [order, setOrder] = useState({ pemesan: "", wa: "", catatan: "" })
   const [alert, setAlert] = useState("")
   const [done, setDone] = useState("")
@@ -328,6 +328,13 @@ export default function Studio() {
         <div className="sheet-page">
           <div className="desk-preview" style={themeStyle}>{preview}</div>
           <form className="data-form studio-form" onSubmit={(e) => e.preventDefault()}>
+            <div className="sheet-top-nav">
+              <button type="button" className="sheet-back-btn" onClick={() => go("demo")}>
+                <span className="material-symbols-outlined">arrow_back</span>
+                <span>Pratinjau</span>
+              </button>
+              <span className="sheet-top-title">Isi Data</span>
+            </div>
             <section className="f-card">
               <header className="f-head"><i><span className="material-symbols-outlined">palette</span></i>Tampilan</header>
               <div className="f-row">
@@ -524,6 +531,13 @@ export default function Studio() {
         <div className="sheet-page">
           <div className="desk-preview" style={themeStyle}>{preview}</div>
           <form className="data-form studio-form" onSubmit={(e) => e.preventDefault()}>
+            <div className="sheet-top-nav">
+              <button type="button" className="sheet-back-btn" onClick={() => go("isi")}>
+                <span className="material-symbols-outlined">arrow_back</span>
+                <span>Isi Data</span>
+              </button>
+              <span className="sheet-top-title">Order</span>
+            </div>
             <section className="f-card">
               <header className="f-head"><i><span className="material-symbols-outlined">person</span></i>Pemesan</header>
               <label className="f-row">
@@ -641,6 +655,31 @@ export default function Studio() {
             <span className="material-symbols-outlined">palette</span>
           </button>
         </div>
+      )}
+
+      
+      {step === "demo" && (
+        <button
+          type="button"
+          className={chromeVisible ? "fab-btn fab-isi" : "fab-btn fab-isi hide"}
+          aria-label="Isi Data Undangan"
+          title="Isi Data"
+          onClick={() => go("isi")}
+        >
+          <span className="material-symbols-outlined">edit_note</span>
+        </button>
+      )}
+
+      {step === "isi" && (
+        <button
+          type="button"
+          className={chromeVisible ? "fab-btn fab-order" : "fab-btn fab-order hide"}
+          aria-label="Lanjut ke Order"
+          title="Lanjut ke Order"
+          onClick={() => go("order")}
+        >
+          <span className="material-symbols-outlined">shopping_bag</span>
+        </button>
       )}
 
       {alert && (

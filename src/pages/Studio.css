@@ -50,17 +50,7 @@
    rata di tepi bawah, warna mengikuti mode terang/gelap, garis tipis di atas,
    tab aktif hanya berganti warna (tanpa background pil). */
 .dock {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  margin: 0 auto;
-  max-width: 430px;
-  z-index: 20;
-  display: flex;
-  gap: 2px;
-  padding: 6px 8px calc(6px + var(--safe-bottom));
-  background: var(--surface);
-  border-top: 0.5px solid var(--line);
-  transition: transform .28s ease, opacity .22s ease;
+  display: none;
 }
 .dock.hide {
   transform: translateY(100%);
@@ -91,9 +81,9 @@
 
 .dock-color-item {
   position: fixed;
-  right: 14px;
-  bottom: calc(80px + var(--safe-bottom));
-  z-index: 20;
+  right: 18px;
+  bottom: calc(138px + var(--safe-bottom));
+  z-index: 30;
   transition: transform .28s ease, opacity .22s ease;
 }
 .dock-color-item.hide {
@@ -161,6 +151,7 @@
   /* rail Studio = kerangka yang sama dengan SideNav (220px, baris logo --bar-h, tagline + mode di bawah) */
   .dock {
     --edge: 20px;
+    display: flex;
     grid-column: 1;
     grid-row: 1;
     position: sticky;
@@ -177,9 +168,8 @@
     align-items: stretch;
     gap: 2px;
     padding: 0;
-    background: var(--paper);
+    background: var(--surface);
     border-top: 0;
-    border-right: 0.5px solid var(--line);
     transform: none;
     opacity: 1;
     pointer-events: auto;
@@ -192,7 +182,6 @@
     flex: none;
     padding: 0 var(--edge);
     margin-bottom: 14px;
-    border-bottom: 0.5px solid var(--line);
   }
   .dock-tab {
     flex: none;
@@ -560,3 +549,74 @@
 .ls-add .material-symbols-outlined { font-size: 20px; }
 .ls-add em { font-style: normal; font-weight: 500; font-size: 12px; color: var(--mute); }
 .ls-add:hover { border-color: var(--hati); color: var(--hati); }
+/* Floating Action Buttons (FAB) & Mobile Sheet Nav */
+.fab-btn {
+  position: fixed;
+  right: 18px;
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--hati);
+  color: var(--on-hati);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(179, 52, 52, 0.45);
+  z-index: 30;
+  transition: transform .25s ease, opacity .2s ease;
+}
+.fab-btn .material-symbols-outlined {
+  font-size: 26px;
+}
+.fab-btn:active {
+  transform: scale(0.92);
+}
+.fab-isi {
+  bottom: calc(72px + var(--safe-bottom));
+}
+.fab-order {
+  bottom: calc(24px + var(--safe-bottom));
+}
+.fab-btn.hide {
+  transform: translateY(28px) scale(0.85);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sheet-top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+.sheet-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--mute);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 0;
+  cursor: pointer;
+}
+.sheet-back-btn:hover {
+  color: var(--ink);
+}
+.sheet-back-btn .material-symbols-outlined {
+  font-size: 20px;
+}
+.sheet-top-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mute);
+}
+
+@media (min-width: 900px) {
+  .fab-btn { display: none; }
+  .sheet-top-nav { display: none; }
+}
